@@ -1,4 +1,5 @@
 # -*- coding: mbcs -*-
+
 from part import *
 from material import *
 from section import *
@@ -12,117 +13,187 @@ from job import *
 from sketch import *
 from visualization import *
 from connectorBehavior import *
-mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=10.0)
-mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 0.0), point2=(
-    2.0, 0.0))
-mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((1.0, 0.0))
-mdb.models['Model-1'].sketches['__profile__'].HorizontalConstraint(
-    addUndoState=False, entity=
-    mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((1.0, 0.0), 
-    ))
-mdb.models['Model-1'].sketches['__profile__'].Line(point1=(2.0, 0.0), point2=(
-    4.0, 0.0))
-mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((3.0, 0.0))
-mdb.models['Model-1'].sketches['__profile__'].HorizontalConstraint(
-    addUndoState=False, entity=
-    mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((3.0, 0.0), 
-    ))
-mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((1.0, 0.0))
-mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((3.0, 0.0))
-mdb.models['Model-1'].sketches['__profile__'].ParallelConstraint(addUndoState=
-    False, entity1=
-    mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((1.0, 0.0), )
-    , entity2=mdb.models['Model-1'].sketches['__profile__'].geometry.findAt((
-    3.0, 0.0), ))
-mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Part-1', type=
-    DEFORMABLE_BODY)
-mdb.models['Model-1'].parts['Part-1'].BaseWire(sketch=
-    mdb.models['Model-1'].sketches['__profile__'])
-del mdb.models['Model-1'].sketches['__profile__']
-mdb.models['Model-1'].IProfile(b1=0.1, b2=0.1, h=0.2, l=0.1, name='Profile-1', 
+
+import regionToolset
+
+#session.journalOptions.setValues(replayGeometry=COORDINATE,recoverGeometry=COORDINATE)
+
+beamLength=4.0
+cLoad=10000	#only refers to scale
+
+#-----------------------------------------------------
+
+# Create a model.
+
+myModel = mdb.Model(name='ssBeamModel')
+
+#-----------------------------------------------------
+
+# Create a sketch for the base feature.
+	
+mySketch = myModel.ConstrainedSketch(name='beamSketch',sheetSize=10.0)
+
+# Create the line.
+
+mySketch.Line(point1=(0.0, 0.0), point2=(beamLength/2, 0.0))
+
+mySketch.Line(point1=(beamLength/2, 0.0), point2=(beamLength, 0.0))
+	
+# Create a three-dimensional, deformable part.
+
+myBeamPart = myModel.Part(name='beamPart', dimensionality=THREE_D, type=DEFORMABLE_BODY)
+	
+# Create the part's base feature
+myBeamPart.BaseWire(sketch=mySketch)
+
+#-----------------------------------------------------
+
+# Create a material.
+
+#mySteel = myModel.Material(name='Steel')
+
+# Create the elastic properties
+
+#elasticProperties = (209.E9, 0.28)
+#mySteel.Elastic(table=(elasticProperties, ) )
+
+
+#-------------------------------------------------------
+# Create the beam section.
+
+myModel.IProfile(name='IProfile', b1=0.1, b2=0.1, h=0.2, l=0.1,
     t1=0.01, t2=0.01, t3=0.01)
-mdb.models['Model-1'].BeamSection(alphaDamping=0.0, beamShape=CONSTANT, 
-    betaDamping=0.0, centroid=(0.0, 0.0), compositeDamping=0.0, 
-    consistentMassMatrix=False, dependencies=0, integration=BEFORE_ANALYSIS, 
-    name='Section-1', poissonRatio=0.28, profile='Profile-1', shearCenter=(0.0, 
-    0.0), table=((210000000000.0, 82030000000.0), ), temperatureDependency=OFF, 
-    thermalExpansion=OFF)
-mdb.models['Model-1'].parts['Part-1'].Set(edges=
-    mdb.models['Model-1'].parts['Part-1'].edges.findAt(((0.5, 0.0, 0.0), ), ((
-    2.5, 0.0, 0.0), ), ), name='Set-1')
-mdb.models['Model-1'].parts['Part-1'].SectionAssignment(offset=0.0, 
-    offsetField='', offsetType=MIDDLE_SURFACE, region=
-    mdb.models['Model-1'].parts['Part-1'].sets['Set-1'], sectionName=
-    'Section-1', thicknessAssignment=FROM_SECTION)
-mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
-mdb.models['Model-1'].rootAssembly.Instance(dependent=OFF, name='Part-1-1', 
-    part=mdb.models['Model-1'].parts['Part-1'])
-mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial')
-mdb.models['Model-1'].rootAssembly.Set(name='Set-1', vertices=
-    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
-    0.0, 0.0, 0.0), )))
-mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
-    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
-    'BC-1', region=mdb.models['Model-1'].rootAssembly.sets['Set-1'], u1=0.0, 
-    u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET)
-mdb.models['Model-1'].rootAssembly.Set(name='Set-2', vertices=
-    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
-    4.0, 0.0, 0.0), )))
-mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
-    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
-    'BC-2', region=mdb.models['Model-1'].rootAssembly.sets['Set-2'], u1=UNSET, 
-    u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET)
-mdb.models['Model-1'].rootAssembly.Set(name='Set-3', vertices=
-    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
-    2.0, 0.0, 0.0), )))
-mdb.models['Model-1'].ConcentratedForce(cf2=-10000.0, createStepName='Step-1', 
-    distributionType=UNIFORM, field='', localCsys=None, name='Load-1', region=
-    mdb.models['Model-1'].rootAssembly.sets['Set-3'])
-mdb.models['Model-1'].rootAssembly.seedPartInstance(deviationFactor=0.1, 
-    minSizeFactor=0.1, regions=(
-    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ), size=0.2)
-mdb.models['Model-1'].rootAssembly.generateMesh(regions=(
-    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ))
-mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
-    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
-    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
-    multiprocessingMode=DEFAULT, name='ExpAbq00', nodalOutputPrecision=SINGLE, 
-    numCpus=1, numGPUs=0, queue=None, scratch='', type=ANALYSIS, 
-    userSubroutine='', waitHours=0, waitMinutes=0)
-mdb.models['Model-1'].parts['Part-1'].assignBeamSectionOrientation(method=
+
+mySection=myModel.BeamSection(name='beamSection', profile='IProfile',
+    poissonRatio=0.28, integration=BEFORE_ANALYSIS,
+	table=((210000000000.0, 82030000000.0), ), alphaDamping=0.0, beamShape=CONSTANT,
+    betaDamping=0.0, centroid=(0.0, 0.0), compositeDamping=0.0,
+	consistentMassMatrix=False, dependencies=0, shearCenter=(0.0, 0.0),
+	temperatureDependency=OFF, thermalExpansion=OFF)
+	
+# Assign the section to the region. The region refers 
+# to the single cell in this model.
+
+#mdb.models['Model-1'].parts['Part-1'].SectionAssignment(offset=0.0, 
+#    offsetField='', offsetType=MIDDLE_SURFACE, region=
+#    mdb.models['Model-1'].parts['Part-1'].sets['Set-1'], sectionName=
+#    'Section-1', thicknessAssignment=FROM_SECTION)
+
+#beamRegion = (myBeamPart.cells,)
+beamRegion=regionToolset.Region(edges=myBeamPart.edges)
+
+myBeamPart.SectionAssignment(region=beamRegion, sectionName='beamSection',
+    offset=0.0, offsetField='',offsetType=MIDDLE_SURFACE,
+	thicknessAssignment=FROM_SECTION)
+	
+myModel.parts['beamPart'].assignBeamSectionOrientation(method=
     N1_COSINES, n1=(0.0, 0.0, 1.0), region=Region(
-    edges=mdb.models['Model-1'].parts['Part-1'].edges.findAt(((0.5, 0.0, 0.0), 
+    edges=myBeamPart.edges.findAt(((0.5, 0.0, 0.0), 
     ), ((2.5, 0.0, 0.0), ), )))
-mdb.models['Model-1'].rootAssembly.regenerate()
-mdb.jobs['ExpAbq00'].submit(consistencyChecking=OFF)
-mdb.jobs['ExpAbq00']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
-    'clientHost': 'bdl-PC', 'handle': 0, 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
-    'file': 'D:\\SIMULIA\\Temp\\ExpAbq00.odb', 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
-    'message': 'Analysis phase complete', 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(STARTED, {'phase': STANDARD_PHASE, 
-    'clientHost': 'bdl-PC', 'handle': 60784, 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
-    'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
-    'frame': 0, 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
-    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
-    'jobName': 'ExpAbq00', 'severe': 0, 'iterations': 0, 
-    'phase': STANDARD_PHASE, 'equilibrium': 0})
-mdb.jobs['ExpAbq00']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
-    'jobName': 'ExpAbq00', 'memory': 23.6787071228027})
-mdb.jobs['ExpAbq00']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
-    'frame': 1, 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
-    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 1, 
-    'jobName': 'ExpAbq00', 'severe': 0, 'iterations': 1, 
-    'phase': STANDARD_PHASE, 'equilibrium': 1})
-mdb.jobs['ExpAbq00']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
-    'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
-    'message': 'Analysis phase complete', 'jobName': 'ExpAbq00'})
-mdb.jobs['ExpAbq00']._Message(JOB_COMPLETED, {
-    'time': 'Sat Aug 05 12:09:15 2017', 'jobName': 'ExpAbq00'})
-# Save by bdl on 2017_08_05-12.10.39; build 6.13-1 2013_05_16-10.28.56 126354
+
+#-------------------------------------------------------
+
+# Create a part instance.
+myAssembly = myModel.rootAssembly
+myAssembly.DatumCsysByDefault(CARTESIAN)
+myInstance = myAssembly.Instance(name='beamInstance',
+    part=myBeamPart, dependent=OFF)
+
+#-------------------------------------------------------
+
+# Create a step. The time period of the static step is 1.0, 
+# and the initial incrementation is 0.1; the step is created
+# after the initial step. 
+
+myModel.StaticStep(name='beamStep', previous='Initial',
+    nlgeom=OFF, description='Load of the beam.')
+
+#-------------------------------------------------------
+
+#mdb.models['Model-1'].rootAssembly.Set(name='Set-1', vertices=
+#    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
+#    0.0, 0.0, 0.0), )))
+
+#v=myAssembly.instances('beamInstance').vertices
+#verts=v.findAt(((0.0, 0.0, 0.0), ),)
+
+v=myAssembly.instances['beamInstance'].vertices
+verts=v.findAt(((0.0, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts,name='Set-fix1')
+	
+#mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+#    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+#    'BC-1', region=mdb.models['Model-1'].rootAssembly.sets['Set-1'], u1=0.0, 
+#    u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET)
+
+region=myAssembly.sets['Set-fix1']
+
+myModel.DisplacementBC(name='BC-1', createStepName='beamStep',
+    region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
+	amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,fieldName='',
+    localCsys=None)
+	
+#mdb.models['Model-1'].rootAssembly.Set(name='Set-2', vertices=
+#    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
+#    4.0, 0.0, 0.0), )))
+
+v=myAssembly.instances['beamInstance'].vertices
+verts=v.findAt(((beamLength, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts, name='Set-fix2')
+
+#mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+#    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+#    'BC-2', region=mdb.models['Model-1'].rootAssembly.sets['Set-2'], u1=UNSET, 
+#    u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET)
+
+region=myAssembly.sets['Set-fix2']
+	
+myModel.DisplacementBC(name='BC-2', createStepName='beamStep',
+    region=region, u1=UNSET, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
+	amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='',
+	localCsys=None)
+	
+#mdb.models['Model-1'].rootAssembly.Set(name='Set-3', vertices=
+#    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
+#   2.0, 0.0, 0.0), )))
+	
+v=myAssembly.instances['beamInstance'].vertices
+verts=v.findAt(((beamLength/2, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts, name='Set-force')
+
+region=myAssembly.sets['Set-force']
+
+myModel.ConcentratedForce(name='beamLoad', createStepName='beamStep',
+    region=region, cf2=-1.0*cLoad, distributionType=UNIFORM, field='',
+    localCsys=None)
+#-------------------------------------------------------
+
+import mesh
+	
+# Assign an element type to the part instance.
+#region = (myInstance.cells,)
+#elemType = mesh.ElemType(elemCode=B31, elemLibrary=STANDARD)
+#myAssembly.setElementType(regions=region, elemTypes=(elemType,))
+
+# Seed the part instance.
+myAssembly.seedPartInstance(regions=(myInstance,), size=0.2,
+    deviationFactor=0.1, minSizeFactor=0.1)
+	
+# Mesh the part instance.
+myAssembly.generateMesh(regions=(myInstance,))
+
+#-------------------------------------------------------
+
+myAssembly.regenerate()
+#-------------------------------------------------------
+
+# Create an analysis job for the model and submit it.
+
+jobName='ssBeam'
+
+myJob=mdb.Job(name=jobName, model='ssBeamModel')
+	
+myJob.submit(consistencyChecking=OFF)
+
+
+# Save by ldn
