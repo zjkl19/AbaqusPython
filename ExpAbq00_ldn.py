@@ -1,15 +1,7 @@
 # -*- coding: mbcs -*-
 
-from part import *
-from material import *
-from section import *
-from assembly import *
-from step import *
 from interaction import *
-from load import *
-from mesh import *
 from optimization import *
-from job import *
 from sketch import *
 from visualization import *
 from connectorBehavior import *
@@ -28,6 +20,8 @@ cLoad=10000	#only refers to scale
 myModel = mdb.Model(name='ssBeamModel')
 
 #-----------------------------------------------------
+
+from part import *
 
 # Create a sketch for the base feature.
 	
@@ -48,6 +42,8 @@ myBeamPart.BaseWire(sketch=mySketch)
 
 #-----------------------------------------------------
 
+from material import *
+
 # Create a material.
 
 #mySteel = myModel.Material(name='Steel')
@@ -59,6 +55,8 @@ myBeamPart.BaseWire(sketch=mySketch)
 
 
 #-------------------------------------------------------
+
+from section import *
 # Create the beam section.
 
 myModel.IProfile(name='IProfile', b1=0.1, b2=0.1, h=0.2, l=0.1,
@@ -93,6 +91,8 @@ myModel.parts['beamPart'].assignBeamSectionOrientation(method=
 
 #-------------------------------------------------------
 
+from assembly import *
+
 # Create a part instance.
 myAssembly = myModel.rootAssembly
 myAssembly.DatumCsysByDefault(CARTESIAN)
@@ -100,6 +100,8 @@ myInstance = myAssembly.Instance(name='beamInstance',
     part=myBeamPart, dependent=OFF)
 
 #-------------------------------------------------------
+
+from step import *
 
 # Create a step. The time period of the static step is 1.0, 
 # and the initial incrementation is 0.1; the step is created
@@ -109,6 +111,8 @@ myModel.StaticStep(name='beamStep', previous='Initial',
     nlgeom=OFF, description='Load of the beam.')
 
 #-------------------------------------------------------
+
+from load import *
 
 #mdb.models['Model-1'].rootAssembly.Set(name='Set-1', vertices=
 #    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.findAt(((
@@ -127,6 +131,8 @@ myAssembly.Set(vertices=verts,name='Set-fix1')
 #    u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET)
 
 region=myAssembly.sets['Set-fix1']
+
+
 
 myModel.DisplacementBC(name='BC-1', createStepName='beamStep',
     region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
@@ -168,7 +174,7 @@ myModel.ConcentratedForce(name='beamLoad', createStepName='beamStep',
     localCsys=None)
 #-------------------------------------------------------
 
-import mesh
+from mesh import *
 	
 # Assign an element type to the part instance.
 #region = (myInstance.cells,)
@@ -187,6 +193,7 @@ myAssembly.generateMesh(regions=(myInstance,))
 myAssembly.regenerate()
 #-------------------------------------------------------
 
+from job import *
 # Create an analysis job for the model and submit it.
 
 jobName='ssBeam'
