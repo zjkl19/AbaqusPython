@@ -1,1 +1,1 @@
-copy GuoxiBridgeContinuousBeam.py d:\simulia\temp /y
+copy CBeamTest.py d:\simulia\temp /y
