@@ -67,7 +67,7 @@ myC50.Elastic(table=((34500000000.0, 0.2), ))	#3.45e10N/m^2
 
 from section import *
 # Create the beam section.
-
+        
 myModel.GeneralizedProfile(name='beamProfile', area=3.24, i11=0.153819, i12=0.264036, i22=21.7272, j=0.60, gammaO=0.0, gammaW=0.0) 
 
 myModel.BeamSection(name='beamSection', integration=BEFORE_ANALYSIS,
