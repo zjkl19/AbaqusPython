@@ -153,16 +153,14 @@ myModel.DisplacementBC(name='BC-1', createStepName='beamStep',
 #e1=es.findAt((1.,0.,0.),)
 
 #for i in range(2,nSpan+2):
-for i in range(2,nSpan+2):
+for i in range(2,3):
     #v=myAssembly.instances['beamInstance'].vertices
     #verts=v.findAt((((i-1)*span, 0.0, 0.0), ),)
     
     #pt=myBeamPart.DatumPointByEdgeParam(edge=e1,parameter=(i-1)*span/(nSpan*span))
     #d=myBeamPart.datums
-    
-    verts=v.findAt((((i-1)*span, 0.0, 0.0), ),)
-    #verts=v.findAt(((40.0, 0.0, 0.0), ),)
-    
+	
+    verts=v.findAt(((40.0, 0.0, 0.0), ),)
     #verts=v.findAt(d[pt.id],)
     #myAssembly.Set(vertices=verts,name='Set-fix'+str(i))
     myAssembly.Set(vertices=verts,name='Set-fix'+str(i))
