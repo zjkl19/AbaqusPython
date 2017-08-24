@@ -268,42 +268,4 @@ myJob=mdb.Job(name=jobName, model='cBeamModel')
 myJob.submit(consistencyChecking=OFF)
 
 
-#-----------------------------------
-
-from odbAccess import *
-
-myJob.waitForCompletion()
-
-#ms=myJob.messages[-1]
-
-instanceName='beamInstance1'
-stepName='Step-Gravity2'
-
-frame=1
-
-x,y=[],[]
-
-#if ms.type==JOB_COMPLETED:
-odbPath=jobName+'.odb'
-o=openOdb(path=odbPath,readOnly=True)
-ns=o.rootAssembly.instances[instanceName.upper()].nodes
-fop=o.steps[stepName].getFrame(frameValue=frame).fieldOutputs['U'].values
-
-(u1, u2, u3) = fop[i].data
-
-print str(u2)
-
-with open("nu.txt","w") as f:
-    f.write(str(u2))
-
-o.close()
-#for i in range(len(ns)):
-#    (x1,y1,z1)=ns[i].coordinates
-#    (u1,u2)=fop[i].data
-#    x.append(x1)
-#   y.append(u2)
-#o.close()
-
-
-
 # Save by ldn
