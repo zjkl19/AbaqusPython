@@ -155,6 +155,9 @@ myModel.StaticStep(name='beamStep', previous='Initial',
 
 myModel.StaticStep(name='Step-Gravity', previous='beamStep',
     minInc=0.001, initialInc=0.2, description='Load of the Gravity.')
+    
+myModel.StaticStep(name='Step-Gravity2', previous='Step-Gravity',
+    minInc=0.001, initialInc=0.2, description='Load of the Gravity.')
 
 
 #-------------------------------------------------------
@@ -201,15 +204,15 @@ myModel.DisplacementBC(name='BC-'+str(nSpan+1), createStepName='beamStep',
 
 
 e = myBeamInstance1.edges
-setGravity = myAssembly.Set(edges=e, name='Set4Gravity')
-Load1 = myModel.Gravity(name='Load-Gravity', 
+setGravity = myAssembly.Set(edges=e, name='Set4Gravity1')
+Load1 = myModel.Gravity(name='Load-Gravity1', 
     createStepName='Step-Gravity', comp2=-1.0*Gravity, field='', 
     distributionType=UNIFORM, region=setGravity)
     
 e = myBeamInstance2.edges
-setGravity = myAssembly.Set(edges=e, name='Set4Gravity')
-Load2 = myModel.Gravity(name='Load-Gravity', 
-    createStepName='Step-Gravity', comp2=-1.0*Gravity, field='', 
+setGravity = myAssembly.Set(edges=e, name='Set4Gravity2')
+Load2 = myModel.Gravity(name='Load-Gravity2', 
+    createStepName='Step-Gravity2', comp2=-1.0*Gravity, field='', 
     distributionType=UNIFORM, region=setGravity)
 #-------------------------------------------------------
 
