@@ -145,7 +145,7 @@ myAssembly.Set(vertices=verts,name='Set-fix1')
 region=myAssembly.sets['Set-fix1']
 
 myModel.DisplacementBC(name='BC-1', createStepName='beamStep',
-    region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
+    region=region, u1=UNSET, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
     amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,fieldName='',
     localCsys=None)
 

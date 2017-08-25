@@ -80,9 +80,7 @@ itest=0.153819*1.0
 #i12test=0.264036
 i12test=0.0
 
-#myModel.GeneralizedProfile(name='beamProfile', area=3.24, i11=itest, i12=i12test, i22=21.7272, j=0.262667, gammaO=0.0, gammaW=0.0) 
-
-myModel.RectangularProfile(name='beamProfile',a=0.3,b=0.4)
+myModel.GeneralizedProfile(name='beamProfile', area=3.24, i11=itest, i12=i12test, i22=21.7272, j=0.262667, gammaO=0.0, gammaW=0.0) 
 
 myModel.BeamSection(name='beamSection', integration=BEFORE_ANALYSIS,density=2549.0,
 	poissonRatio=0.20, beamShape=CONSTANT, profile='beamProfile', thermalExpansion=OFF,
