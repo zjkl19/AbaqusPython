@@ -287,8 +287,7 @@ myJob.waitForCompletion()
 instanceName='beamInstance1'
 stepName='Step-Gravity2'
 
-frame=1
-
+frame=-1
 x,y=[],[]
 
 #if ms.type==JOB_COMPLETED:

@@ -1,5 +1,6 @@
 # -*- coding: mbcs -*-
 
+
 from abaqus import *
 from abaqusConstants import *
 
