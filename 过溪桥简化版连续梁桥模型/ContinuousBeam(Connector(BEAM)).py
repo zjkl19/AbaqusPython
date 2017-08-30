@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 # -*- coding: mbcs -*-
 
+#explanation:
+#abstract:the usage of Connector(BEAM)
+#structure:continuous beam bridge with 2 spans.
+#load:gravity
+#post:the u2 of the first span.
+
+#comment by lindinan in 20170830
+
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *

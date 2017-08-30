@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 # -*- coding: mbcs -*-
 
+#explanation:
+#abstract:the usage of Connector(BEAM)
+#structure:continuous beam bridge with 2 spans.
+#load:gravity
+#post:the u2 of the first span.
+
+#comment by lindinan in 20170830
+
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *
@@ -80,7 +88,9 @@ itest=0.153819*1.0
 #i12test=0.264036
 i12test=0.0
 
-myModel.GeneralizedProfile(name='beamProfile', area=3.24, i11=itest, i12=i12test, i22=21.7272, j=0.262667, gammaO=0.0, gammaW=0.0) 
+#myModel.GeneralizedProfile(name='beamProfile', area=3.24, i11=itest, i12=i12test, i22=21.7272, j=0.262667, gammaO=0.0, gammaW=0.0) 
+
+myModel.RectangularProfile(name='beamProfile',a=0.3,b=0.4)
 
 myModel.BeamSection(name='beamSection', integration=BEFORE_ANALYSIS,density=2549.0,
 	poissonRatio=0.20, beamShape=CONSTANT, profile='beamProfile', thermalExpansion=OFF,
@@ -285,8 +295,7 @@ myJob.waitForCompletion()
 instanceName='beamInstance1'
 stepName='Step-Gravity2'
 
-frame=1
-
+frame=-1
 x,y=[],[]
 
 #if ms.type==JOB_COMPLETED:
