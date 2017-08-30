@@ -2,11 +2,15 @@
 # -*- coding: mbcs -*-
 
 
+#the template of the original example:ExpAbq00.py
+#link:http://www.020fea.com/a/5/152/11521.html
+
 #explanation:
-#abstract:the usage of Connector(BEAM)
-#structure:continuous beam bridge with 2 spans.
-#load:gravity
-#post:the u2 of the first span.
+#structure:simple supported beam
+#load:ConcentratedForce in the midSpan
+#post:none
+
+#set Connector(BEAM) in the midSpan
 
 #comment by lindinan in 20170830
 
@@ -24,17 +28,15 @@ import regionToolset
 
 #session.journalOptions.setValues(replayGeometry=COORDINATE,recoverGeometry=COORDINATE)
 
-span=5.0	#span unit:m
+span=4.0	#span unit:m
 
-nSpan=2		#number of span
-
-Gravity = 9.8	#acceleration of gravity 
 
 #-----------------------------------------------------
 
 # Create a model.
 
-myModel = mdb.Model(name='cBeamModel')
+myModel = mdb.Model(name='SimpleSupportedBeamModel1')
+cLoad=10000	#only refers to scale
 
 #-----------------------------------------------------
 
@@ -46,7 +48,7 @@ mySketch1 = myModel.ConstrainedSketch(name='beamSketch1',sheetSize=10.0)
 
 # Create the line.
 
-mySketch1.Line(point1=(0.0, 0.0), point2=(span, 0.0))
+mySketch1.Line(point1=(0.0, 0.0), point2=(span/2, 0.0))
 
 # Create a three-dimensional, deformable part.
 
@@ -56,7 +58,7 @@ myBeamPart1 = myModel.Part(name='beamPart1', dimensionality=THREE_D, type=DEFORM
 myBeamPart1.BaseWire(sketch=mySketch1)
 
 mySketch2 = myModel.ConstrainedSketch(name='beamSketch2',sheetSize=10.0)
-mySketch2.Line(point1=(span, 0.0), point2=(2*span, 0.0))
+mySketch2.Line(point1=(span/2, 0.0), point2=(span, 0.0))
 myBeamPart2 = myModel.Part(name='beamPart2', dimensionality=THREE_D, type=DEFORMABLE_BODY)
 myBeamPart2.BaseWire(sketch=mySketch2)
 
@@ -83,17 +85,13 @@ myC50.Elastic(table=((34500000000.0, 0.2), ))	#3.45e10N/m^2
 from section import *
 # Create the beam section.
 
-#itest=0.153819
-itest=0.153819*1.0
 
-#i12test=0.264036
-i12test=0.0
-
-myModel.GeneralizedProfile(name='beamProfile', area=3.24, i11=itest, i12=i12test, i22=21.7272, j=0.262667, gammaO=0.0, gammaW=0.0) 
-
-myModel.BeamSection(name='beamSection', integration=BEFORE_ANALYSIS,density=2549.0,
-	poissonRatio=0.20, beamShape=CONSTANT, profile='beamProfile', thermalExpansion=OFF,
-	temperatureDependency=OFF, dependencies=0, table=((34500000000.0, 13800000000.0), ),
+myModel.IProfile(name='beamProfile', b1=0.1, b2=0.1, h=0.2, l=0.1,
+    t1=0.01, t2=0.01, t3=0.01)
+    
+myModel.BeamSection(name='beamSection', integration=BEFORE_ANALYSIS,
+	poissonRatio=0.28, beamShape=CONSTANT, profile='beamProfile', thermalExpansion=OFF,
+	temperatureDependency=OFF, dependencies=0, table=((210000000000.0, 82030000000.0), ),
 	alphaDamping=0.0,betaDamping=0.0, compositeDamping=0.0, centroid=(0.0, 0.0), 
 	shearCenter=(0.0, 0.0),	consistentMassMatrix=False)
 
@@ -107,7 +105,7 @@ myBeamPart1.SectionAssignment(region=beamRegion, sectionName='beamSection',
 myModel.parts['beamPart1'].assignBeamSectionOrientation(method=
     N1_COSINES, n1=(0.0, 0.0, 1.0), region=Region(
     edges=myBeamPart1.edges.findAt(((0.0, 0.0, 0.0), 
-    ), ((5.0, 0.0, 0.0), ), )))
+    ), ((span/2, 0.0, 0.0), ), )))
     
 ###
 beamRegion=regionToolset.Region(edges=myBeamPart2.edges)
@@ -118,8 +116,8 @@ myBeamPart2.SectionAssignment(region=beamRegion, sectionName='beamSection',
 	
 myModel.parts['beamPart2'].assignBeamSectionOrientation(method=
     N1_COSINES, n1=(0.0, 0.0, 1.0), region=Region(
-    edges=myBeamPart2.edges.findAt(((5.0, 0.0, 0.0), 
-    ), ((10.0, 0.0, 0.0), ), )))
+    edges=myBeamPart2.edges.findAt(((span/2, 0.0, 0.0), 
+    ), ((span, 0.0, 0.0), ), )))
 
 #-------------------------------------------------------
 
@@ -142,8 +140,8 @@ myModel.ConnectorSection(name='ConnSect-1',
 v1 = myAssembly.instances['beamInstance1'].vertices
 v2 = myAssembly.instances['beamInstance2'].vertices
 
-wire = myAssembly.WirePolyLine(points=((v1.findAt(coordinates=(5.0, 0.0, 0.0)), 
-    v2.findAt(coordinates=(5.0, 0.0, 0.0))), ), mergeType=IMPRINT, 
+wire = myAssembly.WirePolyLine(points=((v1.findAt(coordinates=(span/2, 0.0, 0.0)), 
+    v2.findAt(coordinates=(span/2, 0.0, 0.0))), ), mergeType=IMPRINT, 
     meshable=False)
     
 oldName = wire.name
@@ -151,7 +149,7 @@ myAssembly.features.changeKey(fromName=oldName,
     toName='Wire-1')
 
 e1 = myAssembly.edges
-edges1 = e1.findAt(((5.000025, 0.0, 0.0), ))
+edges1 = e1.findAt(((span/2+0.000025, 0.0, 0.0), ))    #??????????????
 myAssembly.Set(edges=edges1, name='Wire-1-Set-1')
 region = myAssembly.sets['Wire-1-Set-1']
 csa = myAssembly.SectionAssignment(sectionName='ConnSect-1', region=region)
@@ -166,13 +164,7 @@ from step import *
 # after the initial step. 
 
 myModel.StaticStep(name='beamStep', previous='Initial',
-    nlgeom=OFF, description='Load of the beam.')
-
-myModel.StaticStep(name='Step-Gravity', previous='beamStep',
-    minInc=0.001, initialInc=0.2, description='Load of the Gravity.')
-    
-myModel.StaticStep(name='Step-Gravity2', previous='Step-Gravity',
-    minInc=0.001, initialInc=0.2, description='Load of the Gravity.')
+    nlgeom=OFF, description='Initial load of the beam.')
 
 
 #-------------------------------------------------------
@@ -190,45 +182,28 @@ myModel.DisplacementBC(name='BC-1', createStepName='beamStep',
     amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,fieldName='',
     localCsys=None)
 
+#
+v=myAssembly.instances['beamInstance2'].vertices
+verts=v.findAt(((span, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts,name='Set-fix2')
 
-for i in range(2,nSpan+1):
-    v=myAssembly.instances['beamInstance'+str(i)].vertices
-    verts=v.findAt((((i-1)*span, 0.0, 0.0), ),)
+region=myAssembly.sets['Set-fix2']
 
-    myAssembly.Set(vertices=verts,name='Set-fix'+str(i))
-
-    region=myAssembly.sets['Set-fix'+str(i)]
-
-    myModel.DisplacementBC(name='BC-' + str(i), createStepName='beamStep',
-        region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
-        amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,fieldName='',
-        localCsys=None)
-#---------------------
-
-#the end of the cBeam
-v=myAssembly.instances['beamInstance'+str(nSpan)].vertices
-verts=v.findAt(((nSpan*span, 0.0, 0.0), ),)
-myAssembly.Set(vertices=verts,name='Set-fix'+str(nSpan+1))
-
-region=myAssembly.sets['Set-fix'+str(nSpan+1)]
-
-myModel.DisplacementBC(name='BC-'+str(nSpan+1), createStepName='beamStep',
-    region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
+myModel.DisplacementBC(name='BC-2', createStepName='beamStep',
+    region=region, u1=UNSET, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
     amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,fieldName='',
     localCsys=None)
 
+v=myAssembly.instances['beamInstance1'].vertices
+verts=v.findAt(((span/2, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts, name='Set-force')
 
-e = myBeamInstance1.edges
-setGravity = myAssembly.Set(edges=e, name='Set4Gravity1')
-Load1 = myModel.Gravity(name='Load-Gravity1', 
-    createStepName='Step-Gravity', comp2=-1.0*Gravity, field='', 
-    distributionType=UNIFORM, region=setGravity)
+region=myAssembly.sets['Set-force']
+
+myModel.ConcentratedForce(name='CLoad', createStepName='beamStep',
+    region=region, cf2=-1.0*cLoad, distributionType=UNIFORM, field='',
+    localCsys=None)
     
-e = myBeamInstance2.edges
-setGravity = myAssembly.Set(edges=e, name='Set4Gravity2')
-Load2 = myModel.Gravity(name='Load-Gravity2', 
-    createStepName='Step-Gravity2', comp2=-1.0*Gravity, field='', 
-    distributionType=UNIFORM, region=setGravity)
 #-------------------------------------------------------
 
 from mesh import *
@@ -240,30 +215,21 @@ from mesh import *
 
 
 # Seed the part instance.
-myBeamPart1.seedPart(size=span/5,
+myBeamPart1.seedPart(size=span/20,
     deviationFactor=0.1, minSizeFactor=0.1)
 
 #need:
 #from abaqus import *
 #from abaqusConstants import *
 
-elemType1=mesh.ElemType(elemCode=B31)
-
-pR=(myBeamPart1.edges,)
-
-myBeamPart1.setElementType(regions=pR, elemTypes=(elemType1,))
 
 # Mesh the part instance.
 myBeamPart1.generateMesh()
 
-myBeamPart2.seedPart(size=span/5,
+myBeamPart2.seedPart(size=span/20,
     deviationFactor=0.1, minSizeFactor=0.1)
-	
-elemType2=mesh.ElemType(elemCode=B31)
 
-pR=(myBeamPart2.edges,)
 
-myBeamPart2.setElementType(regions=pR, elemTypes=(elemType2,))
 
 # Mesh the part instance.
 myBeamPart2.generateMesh()
@@ -276,9 +242,9 @@ myAssembly.regenerate()
 from job import *
 # Create an analysis job for the model and submit it.
 
-jobName='cBeam'
+jobName='SimpleSupportedBeam'
 
-myJob=mdb.Job(name=jobName, model='cBeamModel')
+myJob=mdb.Job(name=jobName, model='SimpleSupportedBeamModel1')
 	
 myJob.submit(consistencyChecking=OFF)
 
@@ -292,9 +258,9 @@ myJob.waitForCompletion()
 #ms=myJob.messages[-1]
 
 instanceName='beamInstance1'
-stepName='Step-Gravity2'
+stepName='beamStep'
 
-frame=1
+frame=-1
 
 x,y=[],[]
 
