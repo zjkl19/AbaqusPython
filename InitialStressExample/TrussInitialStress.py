@@ -117,7 +117,14 @@ from step import *
 # after the initial step. 
 
 myModel.StaticStep(name='InitialStep', previous='Initial',
-    nlgeom=OFF, description='Load of the structure')
+    nlgeom=OFF, description='initial load of the structure')
+
+myModel.StaticStep(name='structStep', previous='InitialStep',
+    nlgeom=OFF, description='balance load of the structure')
+    
+myModel.FieldOutputRequest(name='F-Output-2', 
+    createStepName='structStep', variables=('S', 'PE', 'PEEQ', 'PEMAG', 'LE', 
+    'U', 'RF', 'CF', 'SF', 'CSTRESS', 'CDISP', 'NFORC'))
 
 #-------------------------------------------------------
 
@@ -147,14 +154,35 @@ myModel.DisplacementBC(name='BC-2', createStepName='InitialStep',
     localCsys=None)
 
 
-
 e1 = trussInstance1.edges
 edges1 = e1.findAt(((l1/2, 0.0, 0.0), ))
 region = myAssembly.Set(edges=edges1, name='Set-2')
 myModel.Stress(name='Predefined Field-1', 
-    region=region, distributionType=UNIFORM, sigma11=1.0, sigma22=0, 
-    sigma12=0, sigma33=None, sigma13=None, sigma23=None)
-    
+    region=region, distributionType=UNIFORM, sigma11=1.0, sigma22=0.0, 
+    sigma12=0.0, sigma33=None, sigma13=None, sigma23=None)
+
+###
+balanceLoad=1.0     #unit: N
+
+v=trussInstance1.vertices
+verts=v.findAt(((0.0, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts, name='Set-force1')
+
+region=myAssembly.sets['Set-force1']
+
+
+myModel.ConcentratedForce(name='leftLoad', createStepName='structStep',
+    region=region, cf1=-1.0*balanceLoad, distributionType=UNIFORM, field='',
+    localCsys=None)
+
+v=trussInstance1.vertices
+verts=v.findAt(((l1, 0.0, 0.0), ),)
+myAssembly.Set(vertices=verts, name='Set-force2')
+
+region=myAssembly.sets['Set-force2']
+myModel.ConcentratedForce(name='rightLoad', createStepName='structStep',
+    region=region, cf1=1.0*balanceLoad, distributionType=UNIFORM, field='',
+    localCsys=None)
 #-------------------------------------------------------
 
 import mesh
@@ -166,7 +194,7 @@ import mesh
 
 
 # Seed the part instance.
-trussPart1.seedPart(size=l1/5,
+trussPart1.seedPart(size=l1,
     deviationFactor=0.1, minSizeFactor=0.1)
     
 elemType=mesh.ElemType(elemCode=T3D2)
