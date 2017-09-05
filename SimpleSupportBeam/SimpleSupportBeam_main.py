@@ -19,7 +19,7 @@ from connectorBehavior import *
 
 import regionToolset
 
-#session.journalOptions.setValues(replayGeometry=COORDINATE,recoverGeometry=COORDINATE)
+session.journalOptions.setValues(replayGeometry=COORDINATE,recoverGeometry=COORDINATE)
 
 beamLength=4.0
 cLoad=10000	#only refers to scale
@@ -120,6 +120,9 @@ from step import *
 
 myModel.StaticStep(name='beamStep', previous='Initial',
     nlgeom=OFF, description='Load of the beam.')
+    
+myModel.FieldOutputRequest(name='F-Output-2', 
+    createStepName='beamStep', variables=('SF',))
 
 #-------------------------------------------------------
 
@@ -146,7 +149,7 @@ region=myAssembly.sets['Set-fix1']
 
 
 myModel.DisplacementBC(name='BC-1', createStepName='beamStep',
-    region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, ur2=0.0, ur3=UNSET,
+    region=region, u1=0.0, u2=0.0, u3=UNSET, ur1=0.0, ur2=0.0, ur3=UNSET,
 	amplitude=UNSET, fixed=OFF, distributionType=UNIFORM,fieldName='',
     localCsys=None)
 	
@@ -193,7 +196,7 @@ from mesh import *
 #myAssembly.setElementType(regions=region, elemTypes=(elemType,))
 
 # Seed the part instance.
-myAssembly.seedPartInstance(regions=(myInstance,), size=0.2,
+myAssembly.seedPartInstance(regions=(myInstance,), size=0.01,
     deviationFactor=0.1, minSizeFactor=0.1)
 	
 # Mesh the part instance.
