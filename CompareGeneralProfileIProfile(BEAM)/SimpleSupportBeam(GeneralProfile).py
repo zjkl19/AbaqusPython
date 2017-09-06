@@ -70,10 +70,9 @@ from material import *
 from section import *
 # Create the beam section.
 
-myModel.IProfile(name='IProfile', b1=0.1, b2=0.1, h=0.2, l=0.1,
-    t1=0.01, t2=0.01, t3=0.01)
-
-mySection=myModel.BeamSection(name='beamSection', profile='IProfile',
+myModel.GeneralizedProfile(name='GProfile', area=3.80e-3, i11=2.292667e-5, i12=0, i22=1.681667e-6, j=1.30e-7, gammaO=0.0, gammaW=0.0) 
+    
+mySection=myModel.BeamSection(name='beamSection', profile='GProfile',
     poissonRatio=0.28, integration=BEFORE_ANALYSIS,
 	table=((210000000000.0, 82030000000.0), ), alphaDamping=0.0, beamShape=CONSTANT,
     betaDamping=0.0, centroid=(0.0, 0.0), compositeDamping=0.0,

@@ -5,23 +5,23 @@
 @author: ldn
 """
 
-import sys, os.path
-
-sys.path.append('D:\ProgramData\Anaconda3\Lib\site-packages')
-
-import xlwt
-
-path=sys.path[0]
-
-w=xlwt.Workbook()
-
-ws=w.add_sheet('test')
-
-for i in range(10):
-    ws.write(i,2,i)
-
-localPath=os.path.join(path,'example.xls')
-
-w.save(localPath)
-
-
+aDict = {'key1':'value1', 'key2':'value2', 'key3':'value3'}  
+print('-----------dict-------------')  
+for d in aDict:  
+    print("%s:%s" %(d, aDict[d]))  
+  
+print('-----------item-------------')   
+for (k,v) in aDict.items():  
+    print('%s:%s' %(k, v))  
+#效率最高  
+print('------------iteritems---------')  
+for k,v in aDict.items():  
+    print('%s:%s' % (k, v))  
+#最笨的方法  
+print('---------iterkeys---------------')  
+for k in aDict.keys():  
+    print('%s:%s' % (k, aDict[k])) 
+  
+print('------------iterkeys, itervalues----------')  
+for k,v in zip(aDict.keys(), aDict.values()):  
+    print('%s:%s' % (k, v) )
