@@ -174,7 +174,8 @@ myModel.rootAssembly.features.changeKey(fromName=oldName,
     toName='Wire-1')
 
 e1 = myAssembly.edges
-edges1 = e1.findAt(((beamLength+1.0e-4, -1.0e-4, 0.0), ))
+#edges1 = e1.findAt(((beamLength+1.0e-4, -1.0e-4, 0.0), ))
+edges1 = e1.findAt(((beamLength, 0, 0.0), ))
 myAssembly.Set(edges=edges1, name='Wire-1-Set-1')
 region = myModel.rootAssembly.sets['Wire-1-Set-1']
 csa = myAssembly.SectionAssignment(sectionName='ConnSect-1', region=region)
