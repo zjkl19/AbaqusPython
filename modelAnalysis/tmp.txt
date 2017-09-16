@@ -1,0 +1,5 @@
+mdb.models['Model-1'].FrequencyStep(name='Step-1', previous='Initial', 
+    description='testFreq', maxEigen=10.0)
+
+mdb.models['Model-1'].FieldOutputRequest(name='F-Output-2', 
+    createStepName='Step-1', variables=('ENER', 'ELEN'))
