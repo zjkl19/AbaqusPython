@@ -166,7 +166,7 @@ myModel.ConnectorSection(name='ConnSect-2',
     assembledType=BEAM)
     
 v1 = myBeamInstance1.vertices
-v2 = myColumnPart1.vertices
+v2 = myColumnInstance1.vertices
 
 wire = myAssembly.WirePolyLine(points=((v1.findAt(coordinates=(0.0, 0.0, 0.0)), 
     v2.findAt(coordinates=(0.0, 0.0, 0.0))), ), mergeType=IMPRINT, 
