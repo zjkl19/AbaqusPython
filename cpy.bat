@@ -1,0 +1,1 @@
+copy interaction_test.py d:\simulia\temp /y

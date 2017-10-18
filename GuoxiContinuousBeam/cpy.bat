@@ -1,0 +1,1 @@
+copy CBeamTest.py d:\simulia\temp /y

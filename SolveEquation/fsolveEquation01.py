@@ -1,0 +1,34 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Sep  7 21:07:43 2017
+
+@author: ldn
+"""
+
+
+from scipy.optimize import fsolve
+
+def func(i):
+    #x, y, z = i[0], i[1], i[2]
+    myStr=""
+    for j in range(0,2):
+        myStr=myStr+'i['+str(j)+']+i['+str(j+1)+']-1,'
+    myStr=myStr+'i[2]-2'
+    retStr='['+myStr+']'
+    return(eval(retStr))
+    #return [i[0]+i[1]-1,i[1]+i[2]-1,i[2]-2]
+    #return [i[0] + 2 * i[1] + 3 * i[2] - 6,5 * (i[0] ** 2) + 6 * (i[1] ** 2) + 7 * (i[2] ** 2) - 18,9 * (i[0] ** 3) + 10 * (i[1] ** 3) + 11 * (i[2] ** 3) - 30]             
+r = fsolve(func,[0, 0, 0])
+print(r)
+
+#            i[0] + 2 * i[1] + 3 * i[2] - 6,
+#            5 * (i[0] ** 2) + 6 * (i[1] ** 2) + 7 * (i[2] ** 2) - 18,
+#            9 * (i[0] ** 3) + 10 * (i[1] ** 3) + 11 * (i[2] ** 3) - 30
+
+#            for j in range(0,3):
+#                ast.literal_val('i[j]+i[j+1]-1,')      
+#            i[2]=2
+
+#%    z(1)-20.35,z(15)-z(1),z(8)-((1/2)*(z(1)+z(15))-9.00),...,
+#%    Tx*(-1*((z(1)-z(2))/d(2))+(z(2)-z(3))/d(3))-(Wsi+Wci),...,
+#%    Tx*(-1*((z(2)-z(3))/d(3))+(z(3)-z(4))/d(4))-(Wsi+Wci), ...,
