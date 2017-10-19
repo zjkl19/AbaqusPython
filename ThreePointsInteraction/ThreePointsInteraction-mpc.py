@@ -138,51 +138,31 @@ myBeamInstance2 = myAssembly.Instance(name='beamInstance2',
 myColumnInstance1 = myAssembly.Instance(name='columnInstance1',
     part=myColumnPart1, dependent=ON)
 
+import regionToolset
     
-myModel.ConnectorSection(name='ConnSect-1', 
-    assembledType=BEAM)
-    
-v1 = myAssembly.instances['beamInstance1'].vertices
-v2 = myAssembly.instances['beamInstance2'].vertices
-
-wire = myAssembly.WirePolyLine(points=((v1.findAt(coordinates=(0.0, 0.0, 0.0)), 
-    v2.findAt(coordinates=(0.0, 0.0, 0.0))), ), mergeType=IMPRINT, 
-    meshable=False)
-
-oldName = wire.name
-myAssembly.features.changeKey(fromName=oldName, 
-    toName='Wire-1')
-
-e1 = myAssembly.edges
-edges1 = e1.findAt(((0.0, 0.0, 0.0), ))
-myAssembly.Set(edges=edges1, name='Wire-1-Set-1')
-region = myAssembly.sets['Wire-1-Set-1']
-csa = myAssembly.SectionAssignment(sectionName='ConnSect-1', region=region)
-#: The section "ConnSect-1" has been assigned to 1 wire or attachment line.
-
-#-------------------------------------------------------
-
-myModel.ConnectorSection(name='ConnSect-2', 
-    assembledType=BEAM)
-    
+# MPC constraint
 v1 = myBeamInstance1.vertices
-v2 = myColumnInstance1.vertices
+verts1 = v1.findAt(((0.0, 0.0, 0.0), ))
+region1=regionToolset.Region(vertices=verts1)
 
-wire = myAssembly.WirePolyLine(points=((v1.findAt(coordinates=(0.0, 0.0, 0.0)), 
-    v2.findAt(coordinates=(0.0, 0.0, 0.0))), ), mergeType=IMPRINT, 
-    meshable=False)
+v1 = myBeamInstance2.vertices
+verts1 = v1.findAt(((0.0, 0.0, 0.0), ))
+region2=regionToolset.Region(vertices=verts1)
+myModel.MultipointConstraint(name='Constraint-1',
+    controlPoint=region1, surface=region2, mpcType=BEAM_MPC,
+    userMode=DOF_MODE_MPC, userType=0, csys=None)
 
-oldName = wire.name
-myAssembly.features.changeKey(fromName=oldName, 
-    toName='Wire-2')
+# MPC constraint
+v1 = myBeamInstance1.vertices
+verts1 = v1.findAt(((0.0, 0.0, 0.0), ))
+region1=regionToolset.Region(vertices=verts1)
 
-e1 = myAssembly.edges
-edges1 = e1.findAt(((0.0, 0.0, 0.0), ))
-myAssembly.Set(edges=edges1, name='Wire-2-Set-1')
-region = myAssembly.sets['Wire-2-Set-1']
-csa = myAssembly.SectionAssignment(sectionName='ConnSect-2', region=region)
-#: The section "ConnSect-2" has been assigned to 1 wire or attachment line.
-
+v1 = myColumnInstance1.vertices
+verts1 = v1.findAt(((0.0, 0.0, 0.0), ))
+region2=regionToolset.Region(vertices=verts1)
+myModel.MultipointConstraint(name='Constraint-2',
+    controlPoint=region1, surface=region2, mpcType=BEAM_MPC,
+    userMode=DOF_MODE_MPC, userType=0, csys=None)
 #-------------------------------------------------------
 
 from step import *
@@ -250,7 +230,7 @@ myModel.LineLoad(name='Load-2',
 
 from mesh import *
 
-Ediv=10    #the number of the Element division
+Ediv=100   #the number of the Element division
 
 # Seed the part instance.
 myBeamPart1.seedPart(size=span/Ediv,
