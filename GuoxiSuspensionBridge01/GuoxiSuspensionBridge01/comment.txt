@@ -1,0 +1,10 @@
+cable1：北侧主缆
+cable2: 南侧主缆
+
+suspender1：北侧吊杆
+suspender2：南侧吊杆
+
+Tower1: 西侧主塔
+Tower2: 东侧主塔
+
+按实际施工顺序建模
