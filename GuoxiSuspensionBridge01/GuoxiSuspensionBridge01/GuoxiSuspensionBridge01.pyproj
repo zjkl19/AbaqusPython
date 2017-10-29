@@ -5,13 +5,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9cb6341b-b1d9-44b4-bf1f-571be8d04c61</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GuoxiSuspensionBridge01.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>GuoxiSuspensionBridge01</Name>
     <RootNamespace>GuoxiSuspensionBridge01</RootNamespace>
+    <InterpreterId>{6c1392a2-fec5-48cd-8112-ecc889f78537}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,13 +24,25 @@
     <DebugSymbols>true</DebugSymbols>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="GuoxiSuspensionBridge01.py" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="CargoCrane.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GuoxiPackage\CreatePart.py" />
+    <Compile Include="GuoxiPackage\__init__.py" />
+    <Compile Include="GuoxiSuspensionBridge.py" />
+    <Compile Include="GuoxiSuspensionBridge_ref.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{6c1392a2-fec5-48cd-8112-ecc889f78537}\2.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GuoxiPackage\" />
+  </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
