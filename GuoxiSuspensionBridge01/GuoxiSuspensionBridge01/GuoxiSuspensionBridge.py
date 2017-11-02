@@ -495,7 +495,202 @@ class BridgeAssembly(object):
             for j in range(len(self.modelPart.suspenderPart[0])):
                 myAssembly.translate(instanceList=('suspenderInstance'+str(i+1)+'-'+str(j+1), ), vector=(0.0, 0.0, bridegeGeometry.rRigidarmSuspenderCoordinate[i][0][2]))
 
+class Property(object):
+    """Properties of the suspension bridge, including material, profile, section"""
 
+    def __init__(self):
+        pass
+
+    def CreateProperty(self):
+        """set the material, profile and section property
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+    
+    def CreateMaterial(self):
+        """create the material
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+        #global myModel
+        myModel.Material(name='Material-2')
+        myModel.materials['Material-2'].Density(table=((7800.0, ), ))
+        myModel.materials['Material-2'].Elastic(table=((2500.0, 0.3), ))
+
+    def CreateProfile(self):
+        """create the profile
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        myModel.GeneralizedProfile(name='GProfile', area=1000000.0, i11=1.0, i12=0, i22=1.0, j=1.0, gammaO=0.0, gammaW=0.0) 
+
+    def CreateSection(self):
+        """create the section
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        trussArea=1.0
+
+        myModel.TrussSection(name='trussSection', material='trussMaterial', 
+            area=trussArea)
+
+    def SectionAssignment(self):
+        """assign the truss and beam section
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """     
+        pass   
+
+    def AssignBeamSectionOrientation(self):
+        """assign the truss and beam section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """     
+        pass
+
+class BridgeStep(object):
+    """define the step"""
+
+     
+
+    def __init__(self):
+        pass
+
+    def CreateStep(self):
+        """abaqus:
+            Create a step. The time period of the static step is 1.0, 
+            and the initial incrementation is 0.1; the step is created
+            after the initial step. 
+        """ 
+        myModel.StaticStep(name='beamStep', previous='Initial',
+            nlgeom=OFF)
+    
+        myModel.FieldOutputRequest(name='F-Output-2', 
+            createStepName='beamStep', variables=('SF',))       
+    
+
+class BridgeLoad(object):
+    """define the load of the structure"""
+
+    def __init__(self):
+        pass
+
+    def CreateDisplacementBC():
+        """create the bridge displacement
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+class BridgeMesh(object):
+    """mesh the structrue"""
+
+    def __init__(self):
+        pass
+
+    def CreateMesh(self):
+        self.__MeshTower()
+        self.__MeshGirder()
+        self.__MeshCable()
+        self.__MeshSuspender()
+
+    def __MeshTower(self):
+        pass
+
+    def __MeshGirder(self):
+        pass
+
+    def __MeshCable(self):
+        pass
+
+    def __MeshSuspender(self):
+        pass    
+         
+       
 #start the program
 session.journalOptions.setValues(replayGeometry=COORDINATE,recoverGeometry=COORDINATE)
 

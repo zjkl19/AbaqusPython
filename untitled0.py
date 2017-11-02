@@ -29,3 +29,5 @@ for i in range(len(rGirderRigidarmCoordinate)):
     lst.append(rGirderRigidarmCoordinate[i])
 lst.append(EndPointCoordinate[1])
 l=tuple(lst)
+
+3432/3
