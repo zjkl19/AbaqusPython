@@ -495,7 +495,16 @@ class BridgeAssembly(object):
             for j in range(len(self.modelPart.suspenderPart[0])):
                 myAssembly.translate(instanceList=('suspenderInstance'+str(i+1)+'-'+str(j+1), ), vector=(0.0, 0.0, bridegeGeometry.rRigidarmSuspenderCoordinate[i][0][2]))
 
-class Property(object):
+class BridgeRegion(object):
+    """store abaqus region of the suspension bridge"""
+
+    def __init__(self):
+        pass
+
+    def CreateRegion(self):
+        pass
+
+class BridgeProperty(object):
     """Properties of the suspension bridge, including material, profile, section"""
 
     def __init__(self):
@@ -516,9 +525,11 @@ class Property(object):
 
         None.
         """
-        pass
+        self.__CreateMaterial()
+        self.__CreateProfile()
+        self.__CreateSection()
     
-    def CreateMaterial(self):
+    def __CreateMaterial(self):
         """create the material
 
         must operate manually
@@ -537,11 +548,29 @@ class Property(object):
         """
 
         #global myModel
-        myModel.Material(name='Material-2')
-        myModel.materials['Material-2'].Density(table=((7800.0, ), ))
-        myModel.materials['Material-2'].Elastic(table=((2500.0, 0.3), ))
 
-    def CreateProfile(self):
+        #must operate manual at the time being
+
+        #cable Material
+        cableMaterial=myModel.Material(name='cableMaterial')
+        cableMaterial.Density(table=((8518.367347, ), ))    #density     
+        cableMaterial.Elastic(table=((2.00E+11, 0.3), ))    #Young's module, possion ratio
+        self.cableMaterial=cableMaterial
+
+        #suspender Material
+        suspenderMaterial=myModel.Material(name='suspenderMaterial')
+        suspenderMaterial.Density(table=((9050, ), ))    #density     
+        suspenderMaterial.Elastic(table=((2.00E+11, 0.3), ))    #Young's module, possion ratio
+        self.suspenderMaterial=suspenderMaterial
+
+        #C50 Material
+        C50Material=myModel.Material(name='C50Material')
+        C50Material.Density(table=((2549, ), ))    #density     
+        C50Material.Elastic(table=((3.45E+10, 0.2), ))    #Young's module, possion ratio
+        self.C50Material=C50Material
+
+
+    def __CreateProfile(self):
         """create the profile
 
         must operate manually
@@ -558,9 +587,34 @@ class Property(object):
 
         None.
         """
-        myModel.GeneralizedProfile(name='GProfile', area=1000000.0, i11=1.0, i12=0, i22=1.0, j=1.0, gammaO=0.0, gammaW=0.0) 
 
-    def CreateSection(self):
+        #Tower profile
+        downTowerProfile=myModel.RectangularProfile(name='downTowerProfile', a=1.3, b=1.6)  #bottom:a height:b
+
+        upTowerProfile=myModel.RectangularProfile(name='upTowerProfile', a=0.9, b=1.4)
+
+
+
+        #girder profile
+        A_AProfile=myModel.GeneralizedProfile(name='A-AProfile', area=3.24, i11=1.54E-01, i12=0, i22=2.17E+01, j=2.64E-01, gammaO=0.0, gammaW=0.0) 
+
+        C_CProfile=myModel.GeneralizedProfile(name='C-CProfile', area=5.74, i11=3.11E-01, i12=0, i22=2.55E+01, j=1.07834, gammaO=0.0, gammaW=0.0)
+
+        E_EProfile=myModel.GeneralizedProfile(name='E-EProfile', area=1.82E+01, i11=6.07E+00, i12=0, i22=1.26E+02, j=2.14E+01, gammaO=0.0, gammaW=0.0)
+
+
+        F_FProfile=myModel.GeneralizedProfile(name='F-FProfile', area=1.24E+01, i11=1.94E+00, i12=0, i22=8.58E+01, j=7.24E+00, gammaO=0.0, gammaW=0.0)
+
+
+        
+        #cable profile
+        #The CircularProfile object is derived from the Profile object
+        cableProfile=myModel.CircularProfile(name='cableProfile', r=0.10695)
+
+        #suspender profile
+        suspenderProfile=myModel.CircularProfile(name='suspenderProfile', r=0.031022)	
+
+    def __CreateSection(self):
         """create the section
 
         must operate manually
@@ -576,12 +630,45 @@ class Property(object):
         Exceptions:
 
         None.
-        """
-        trussArea=1.0
+        """ 
 
-        myModel.TrussSection(name='trussSection', material='trussMaterial', 
-            area=trussArea)
+        #tower section
+        downTowerSection=myModel.BeamSection(name='downTowerSection', 
+              integration=BEFORE_ANALYSIS, profile='downTowerProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
 
+        upTowerSection=myModel.BeamSection(name='upTowerSection', 
+              integration=BEFORE_ANALYSIS, profile='upTowerProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+
+        #girder section
+        A_ASection=myModel.BeamSection(name='A-ASection', 
+              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+
+        C_CSection=myModel.BeamSection(name='C-CSection', 
+              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+
+        E_ESection=myModel.BeamSection(name='E-ESection', 
+              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+
+        F_FSection=myModel.BeamSection(name='F-FSection', 
+              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False) 
+ 
+        #cable section
+        A=3.14159*myModel.profiles['cableProfile'].r**2
+        cableSection=myModel.TrussSection(name='cableSection', material='cableMaterial', 
+            area=A)
+
+        #suspender section
+        A=3.14159*myModel.profiles['suspenderProfile'].r**2
+        suspenderProfile=myModel.CircularProfile(name='suspenderSection', r=0.031022)
+        suspenderSection=myModel.TrussSection(name='suspenderSection', material='suspenderMaterial', 
+            area=A)	
+       
     def SectionAssignment(self):
         """assign the truss and beam section
 
@@ -730,3 +817,6 @@ myAssembly.DatumCsysByDefault(CARTESIAN)
 
 ba=BridgeAssembly(bp)
 ba.CreateAssembly(bg)
+
+bPro=BridgeProperty()
+bPro.CreateProperty()
