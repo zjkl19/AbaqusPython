@@ -8,8 +8,8 @@
 
 #comment by lindinan
 
-class BridgeGeometry(object):
-    """store the bridge geometry information of the suspension bridge"""
+class StructureGeometry(object):
+    """store the structure geometry information of the structure"""
     
     #Tower:
     downTowerBottomCoordinate=(((25,3.3,-3.75),(25,3.3,3.75)),
@@ -60,21 +60,57 @@ class BridgeGeometry(object):
     #suspender
 
     def __init__(self):
-        pass    
+        self.__SetCableCoordinate()     #calc the cable coordinate
 
-class BridgeSketch(object):
-    """Create 'Sketch' of the suspension bridge"""
+    def __SetCableCoordinate(self):
+        """set the cable coordinate
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        aP=self.anchorPointCoordinate
+        hP=self.hangingPointCoordinate
+        uTT=self.upTowerTopCoordinate
+        
+        cableCoordinate=[]
+        for i in range(len(aP)):
+            lst=[]
+            lst.append(aP[i][0])
+            for j in range(len(hP[i])):
+                if j==3:
+                    lst.append(uTT[0][i])
+                elif j==16:
+                    lst.append(uTT[1][i])
+                lst.append(hP[i][j])
+            lst.append(aP[i][1])
+            cableCoordinate.append(tuple(lst))
+        cableCoordinate=tuple(cableCoordinate)
+        self.cableCoordinate=cableCoordinate    
+
+class StructureSketch(object):
+    """Create 'Sketch' of the structure"""
 
     
     def __init__(self):
         pass
-    def CreateSketch(self,bridegeGeometry):
+    def CreateSketch(self,structureGeometry):
         """Create Sketch
         
         function summary
 
         Args:
-            bridegeGeometry: BridgeGeometry instance
+            structureGeometry: structureGeometry instance
 
         Returns:
 
@@ -82,13 +118,13 @@ class BridgeSketch(object):
         """
 
         #design pattern: builder
-        self.__CreateTowerSketch(bridegeGeometry)
-        self.__CreateStiffeningGirderSketch(bridegeGeometry)
-        self.__CreateGirderRigidarmSketch(bridegeGeometry)
-        self.__CreateCableSketch()
-        self.__CreateSuspenderSketch(bridegeGeometry);
+        self.__CreateTowerSketch(structureGeometry)
+        self.__CreateStiffeningGirderSketch(structureGeometry)
+        self.__CreateGirderRigidarmSketch(structureGeometry)
+        self.__CreateCableSketch(structureGeometry)
+        self.__CreateSuspenderSketch(structureGeometry);
 
-    def __CreateTowerSketch(self,bridegeGeometry):
+    def __CreateTowerSketch(self,structureGeometry):
         """CreateTowerSketch
         
         function summary
@@ -104,9 +140,9 @@ class BridgeSketch(object):
 
         #Tower:
 
-        dTB=bridegeGeometry.downTowerBottomCoordinate
-        rUD=bridegeGeometry.rUpDownTowerCoordinate
-        uTT=bridegeGeometry.upTowerTopCoordinate
+        dTB=structureGeometry.downTowerBottomCoordinate
+        rUD=structureGeometry.rUpDownTowerCoordinate
+        uTT=structureGeometry.upTowerTopCoordinate
 
         self.towerSketch=[]
 
@@ -123,7 +159,7 @@ class BridgeSketch(object):
 
         self.towerSketch=tuple(self.towerSketch)
 
-    def __CreateStiffeningGirderSketch(self,bridegeGeometry):
+    def __CreateStiffeningGirderSketch(self,structureGeometry):
         """Create Stiffening Girder Sketch
         
         function summary
@@ -134,9 +170,9 @@ class BridgeSketch(object):
 
         Raises:
         """    
-        eP=bridegeGeometry.EndPointCoordinate
-        rGR=bridegeGeometry.rGirderRigidarmCoordinate
-        rRS=bridegeGeometry.rRigidarmSuspenderCoordinate
+        eP=structureGeometry.EndPointCoordinate
+        rGR=structureGeometry.rGirderRigidarmCoordinate
+        rRS=structureGeometry.rRigidarmSuspenderCoordinate
 
         #stiffeningGirderCoordinate=(eP[0],rGRC[0],eP[1])
         lst=[]
@@ -157,7 +193,7 @@ class BridgeSketch(object):
       
 
     
-    def __CreateGirderRigidarmSketch(self,bridegeGeometry):
+    def __CreateGirderRigidarmSketch(self,structureGeometry):
         """Create Girder Rigidarm Sketch
         
         function summary
@@ -168,8 +204,8 @@ class BridgeSketch(object):
 
         Raises:
         """    
-        rGR=bridegeGeometry.rGirderRigidarmCoordinate
-        rRS=bridegeGeometry.rRigidarmSuspenderCoordinate
+        rGR=structureGeometry.rGirderRigidarmCoordinate
+        rRS=structureGeometry.rRigidarmSuspenderCoordinate
 
         #create GirderRigidarm Sketch
         girderRigidarmSketch=[]
@@ -181,7 +217,7 @@ class BridgeSketch(object):
 
         self.girderRigidarmSketch=tuple(girderRigidarmSketch)        
 
-    def __CreateCableSketch(self):
+    def __CreateCableSketch(self,structureGeometry):
         """Create Cable Sketch
         
         function summary
@@ -192,40 +228,21 @@ class BridgeSketch(object):
 
         Raises:
         """
-        
+         #cable   
+        cableCoordinate=structureGeometry.cableCoordinate
+
         #global myModel
 
-        cableCoordinate=(((-1.45,6.473),(10,11.270569),(15,13.906819),(20,16.903937),(25,20.44),
-            (30,17.92136),(35,15.940382),(40,14.319928),(45,13.059819),(50,12.159874),
-            (55,11.619961),(60,11.44),(65,11.619961),(70,12.159874),(75,13.059819),
-            (80,14.319928),(85,15.940382),(90,17.92136),(95,20.44),(100,16.903937),
-            (105,13.906819),(110,11.270569),(121.45,6.473)),
+        self.cableSketch=[]
+        cableSketch=[]
+        for i in range(len(cableCoordinate)):
+            mySketch = myModel.ConstrainedSketch(name='cableSketch'+str(i+1),sheetSize=10.0)
+            for j in range(len(cableCoordinate[i])-1):
+                mySketch.Line(point1=(cableCoordinate[i][j][0],cableCoordinate[i][j][1]), point2=(cableCoordinate[i][j+1][0],cableCoordinate[i][j+1][1]))
+            cableSketch.append(mySketch)
+        self.cableSketch=tuple(cableSketch)
 
-            ((-1.45,6.473),(10,11.270569),(15,13.906819),(20,16.903937),(25,20.44),
-            (30,17.92136),(35,15.940382),(40,14.319928),(45,13.059819),(50,12.159874),
-            (55,11.619961),(60,11.44),(65,11.619961),(70,12.159874),(75,13.059819),
-            (80,14.319928),(85,15.940382),(90,17.92136),(95,20.44),(100,16.903937),
-            (105,13.906819),(110,11.270569),(121.45,6.473)))
-        
-        self.cableCoordinate=cableCoordinate
-
-        mySketch = myModel.ConstrainedSketch(name='cableSketch1',sheetSize=10.0)
-
-        for i in range(len(cableCoordinate[0])-1):
-            mySketch.Line(point1=cableCoordinate[0][i], point2=cableCoordinate[0][i+1])
-
-        cableSketch1=mySketch
-
-        mySketch = myModel.ConstrainedSketch(name='cableSketch2',sheetSize=10.0)
-
-        for i in range(len(cableCoordinate[1])-1):
-            mySketch.Line(point1=cableCoordinate[1][i], point2=cableCoordinate[1][i+1])
-
-        cableSketch2=mySketch
-
-        self.cableSketch=(cableSketch1,cableSketch2)
-
-    def __CreateSuspenderSketch(self,bridegeGeometry):
+    def __CreateSuspenderSketch(self,structureGeometry):
         """Create Suspender Sketch
         
         function summary
@@ -237,8 +254,8 @@ class BridgeSketch(object):
         Raises:
         """
         
-        hP=bridegeGeometry.hangingPointCoordinate
-        rRS=bridegeGeometry.rRigidarmSuspenderCoordinate             
+        hP=structureGeometry.hangingPointCoordinate
+        rRS=structureGeometry.rRigidarmSuspenderCoordinate             
 
         self.suspenderSketch=[]
         suspenderSketch=[]
@@ -252,8 +269,8 @@ class BridgeSketch(object):
         self.suspenderSketch=tuple(self.suspenderSketch)
      
 
-class BridgePart(object):
-    """Create 'Part' of the suspension bridge"""
+class StructurePart(object):
+    """Create 'Part' of the structure"""
 
     def __init__(self,modelSketch):
         self.modelSketch=modelSketch
@@ -369,13 +386,13 @@ class BridgePart(object):
 
 
 
-class BridgeAssembly(object):
-    """Create 'Assembly' of the suspension bridge"""
+class StructureAssembly(object):
+    """Create 'Assembly' of the structure"""
 
     def __init__(self,modelPart):
         self.modelPart=modelPart
 
-    def CreateAssembly(self,bridegeGeometry):
+    def CreateAssembly(self,structureGeometry):
         """Create Assembly
         
         function summary
@@ -388,7 +405,7 @@ class BridgeAssembly(object):
         Raises:
         """
         self.__CreateInstance()
-        self.__MoveInstance(bridegeGeometry)
+        self.__MoveInstance(structureGeometry)
         self.__MergeInstance()
 
     def __CreateInstance(self):
@@ -427,7 +444,7 @@ class BridgeAssembly(object):
                 p = myModel.parts['suspenderPart'+str(i+1)+'-'+str(j+1)]
                 myAssembly.Instance(name='suspenderInstance'+str(i+1)+'-'+str(j+1), part=p, dependent=ON)
 
-    def __MoveInstance(self,bridegeGeometry):
+    def __MoveInstance(self,structureGeometry):
         """Move Instance: Translate and rotate Instance
         
         function summary
@@ -440,9 +457,9 @@ class BridgeAssembly(object):
         """
         self.__moveTowerInstance()
         self.__moveStiffeningGirderInstance()
-        self.__moveGirderRigidarmInstance(bridegeGeometry)
+        self.__moveGirderRigidarmInstance(structureGeometry)
         self.__moveCableInstance()
-        self.__moveSuspenderInstance(bridegeGeometry)
+        self.__moveSuspenderInstance(structureGeometry)
 
     def __MergeInstance(self):
         """Merge Instance
@@ -469,8 +486,8 @@ class BridgeAssembly(object):
     def __moveStiffeningGirderInstance(self):
         pass
 
-    def __moveGirderRigidarmInstance(self,bridegeGeometry):
-        rGR=bridegeGeometry.rGirderRigidarmCoordinate
+    def __moveGirderRigidarmInstance(self,structureGeometry):
+        rGR=structureGeometry.rGirderRigidarmCoordinate
 
         for i in range(len(self.modelPart.girderRigidarmPart)): 
             myAssembly.rotate(instanceList=('girderRigidarmInstance'+str(i+1), ), axisPoint=rGR[i],
@@ -480,7 +497,7 @@ class BridgeAssembly(object):
         myAssembly.translate(instanceList=('cableInstance1', ), vector=(0.0, 0.0, -3.75))
         myAssembly.translate(instanceList=('cableInstance2', ), vector=(0.0, 0.0, 3.75))
 
-    def __moveSuspenderInstance(self,bridegeGeometry):
+    def __moveSuspenderInstance(self,structureGeometry):
         """move Suspender Instance
         
         function summary
@@ -493,10 +510,10 @@ class BridgeAssembly(object):
         """
         for i in range(len(self.modelPart.suspenderPart)):
             for j in range(len(self.modelPart.suspenderPart[0])):
-                myAssembly.translate(instanceList=('suspenderInstance'+str(i+1)+'-'+str(j+1), ), vector=(0.0, 0.0, bridegeGeometry.rRigidarmSuspenderCoordinate[i][0][2]))
+                myAssembly.translate(instanceList=('suspenderInstance'+str(i+1)+'-'+str(j+1), ), vector=(0.0, 0.0, structureGeometry.rRigidarmSuspenderCoordinate[i][0][2]))
 
-class BridgeRegion(object):
-    """store abaqus region of the suspension bridge"""
+class StructureRegion(object):
+    """store abaqus region of the structure"""
 
     def __init__(self):
         pass
@@ -504,8 +521,15 @@ class BridgeRegion(object):
     def CreateRegion(self):
         pass
 
-class BridgeProperty(object):
-    """Properties of the suspension bridge, including material, profile, section"""
+class StructureInteraction(object):
+    """Create 'Interaction' of the structure"""
+
+    def __init__(self):
+        pass
+
+
+class StructureProperty(object):
+    """Properties of the structure, including material, profile, section"""
 
     def __init__(self):
         pass
@@ -707,7 +731,7 @@ class BridgeProperty(object):
         """     
         pass
 
-class BridgeStep(object):
+class StructureStep(object):
     """define the step"""
 
      
@@ -728,14 +752,14 @@ class BridgeStep(object):
             createStepName='beamStep', variables=('SF',))       
     
 
-class BridgeLoad(object):
+class StructureLoad(object):
     """define the load of the structure"""
 
     def __init__(self):
         pass
 
     def CreateDisplacementBC():
-        """create the bridge displacement
+        """create the displacement of the structure
 
         must operate manually
 
@@ -753,7 +777,7 @@ class BridgeLoad(object):
         """
         pass
 
-class BridgeMesh(object):
+class StructureMesh(object):
     """mesh the structrue"""
 
     def __init__(self):
@@ -792,19 +816,19 @@ myModel = mdb.Model(name=modelName)
 #-----------------------------------------------------
 
 # Create geometry
-bg=BridgeGeometry()
+bg=StructureGeometry()
 
 #-----------------------------------------------------
 
 # Create a sketch
-bs=BridgeSketch()
+bs=StructureSketch()
 bs.CreateSketch(bg)
 
 #-----------------------------------------------------
 
 #Create parts
 import part
-bp=BridgePart(bs)
+bp=StructurePart(bs)
 bp.CreatePart(part)
 
 #-----------------------------------------------------
@@ -815,8 +839,8 @@ from abaqusConstants import *
 myAssembly=myModel.rootAssembly
 myAssembly.DatumCsysByDefault(CARTESIAN)
 
-ba=BridgeAssembly(bp)
+ba=StructureAssembly(bp)
 ba.CreateAssembly(bg)
 
-bPro=BridgeProperty()
+bPro=StructureProperty()
 bPro.CreateProperty()
