@@ -102,9 +102,24 @@ class StructureSketch(object):
     """Create 'Sketch' of the structure"""
 
     
-    def __init__(self):
-        pass
-    def CreateSketch(self,structureGeometry):
+    def __init__(self,structureGeometry):
+        """init
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        self.structureGeometry=structureGeometry
+
+    def CreateSketch(self):
         """Create Sketch
         
         function summary
@@ -118,13 +133,13 @@ class StructureSketch(object):
         """
 
         #design pattern: builder
-        self.__CreateTowerSketch(structureGeometry)
-        self.__CreateStiffeningGirderSketch(structureGeometry)
-        self.__CreateGirderRigidarmSketch(structureGeometry)
-        self.__CreateCableSketch(structureGeometry)
-        self.__CreateSuspenderSketch(structureGeometry);
+        self.__CreateTowerSketch()
+        self.__CreateStiffeningGirderSketch()
+        self.__CreateGirderRigidarmSketch()
+        self.__CreateCableSketch()
+        self.__CreateSuspenderSketch();
 
-    def __CreateTowerSketch(self,structureGeometry):
+    def __CreateTowerSketch(self):
         """CreateTowerSketch
         
         function summary
@@ -140,9 +155,9 @@ class StructureSketch(object):
 
         #Tower:
 
-        dTB=structureGeometry.downTowerBottomCoordinate
-        rUD=structureGeometry.rUpDownTowerCoordinate
-        uTT=structureGeometry.upTowerTopCoordinate
+        dTB=self.structureGeometry.downTowerBottomCoordinate
+        rUD=self.structureGeometry.rUpDownTowerCoordinate
+        uTT=self.structureGeometry.upTowerTopCoordinate
 
         self.towerSketch=[]
 
@@ -159,7 +174,7 @@ class StructureSketch(object):
 
         self.towerSketch=tuple(self.towerSketch)
 
-    def __CreateStiffeningGirderSketch(self,structureGeometry):
+    def __CreateStiffeningGirderSketch(self):
         """Create Stiffening Girder Sketch
         
         function summary
@@ -170,9 +185,9 @@ class StructureSketch(object):
 
         Raises:
         """    
-        eP=structureGeometry.EndPointCoordinate
-        rGR=structureGeometry.rGirderRigidarmCoordinate
-        rRS=structureGeometry.rRigidarmSuspenderCoordinate
+        eP=self.structureGeometry.EndPointCoordinate
+        rGR=self.structureGeometry.rGirderRigidarmCoordinate
+        rRS=self.structureGeometry.rRigidarmSuspenderCoordinate
 
         #stiffeningGirderCoordinate=(eP[0],rGRC[0],eP[1])
         lst=[]
@@ -193,7 +208,7 @@ class StructureSketch(object):
       
 
     
-    def __CreateGirderRigidarmSketch(self,structureGeometry):
+    def __CreateGirderRigidarmSketch(self):
         """Create Girder Rigidarm Sketch
         
         function summary
@@ -204,8 +219,8 @@ class StructureSketch(object):
 
         Raises:
         """    
-        rGR=structureGeometry.rGirderRigidarmCoordinate
-        rRS=structureGeometry.rRigidarmSuspenderCoordinate
+        rGR=self.structureGeometry.rGirderRigidarmCoordinate
+        rRS=self.structureGeometry.rRigidarmSuspenderCoordinate
 
         #create GirderRigidarm Sketch
         girderRigidarmSketch=[]
@@ -217,7 +232,7 @@ class StructureSketch(object):
 
         self.girderRigidarmSketch=tuple(girderRigidarmSketch)        
 
-    def __CreateCableSketch(self,structureGeometry):
+    def __CreateCableSketch(self):
         """Create Cable Sketch
         
         function summary
@@ -229,7 +244,7 @@ class StructureSketch(object):
         Raises:
         """
          #cable   
-        cableCoordinate=structureGeometry.cableCoordinate
+        cableCoordinate=self.structureGeometry.cableCoordinate
 
         #global myModel
 
@@ -242,7 +257,7 @@ class StructureSketch(object):
             cableSketch.append(mySketch)
         self.cableSketch=tuple(cableSketch)
 
-    def __CreateSuspenderSketch(self,structureGeometry):
+    def __CreateSuspenderSketch(self):
         """Create Suspender Sketch
         
         function summary
@@ -254,8 +269,8 @@ class StructureSketch(object):
         Raises:
         """
         
-        hP=structureGeometry.hangingPointCoordinate
-        rRS=structureGeometry.rRigidarmSuspenderCoordinate             
+        hP=self.structureGeometry.hangingPointCoordinate
+        rRS=self.structureGeometry.rRigidarmSuspenderCoordinate             
 
         self.suspenderSketch=[]
         suspenderSketch=[]
@@ -272,10 +287,10 @@ class StructureSketch(object):
 class StructurePart(object):
     """Create 'Part' of the structure"""
 
-    def __init__(self,modelSketch):
-        self.modelSketch=modelSketch
+    def __init__(self,structureSketch):
+        self.structureSketch=structureSketch
 
-    def CreatePart(self,part):
+    def CreatePart(self):
         """Create Part
         
         function summary
@@ -289,12 +304,12 @@ class StructurePart(object):
         """
 
         #design pattern: builder
-        self.__CreateTowerPart(part);
+        self.__CreateTowerPart();
         self.__CreateStiffeningGirderPart();
         self.__CreateCablePart();
         self.__CreateSuspenderPart();
 
-    def __CreateTowerPart(self,part):
+    def __CreateTowerPart(self):
         """Create Tower Part
         
         function summary
@@ -306,12 +321,13 @@ class StructurePart(object):
 
         Raises:
         """
+        #global part
 
         towerPart1 = myModel.Part(name='towerPart1', dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-        towerPart1.BaseWire(sketch=self.modelSketch.towerSketch[0])
+        towerPart1.BaseWire(sketch=self.structureSketch.towerSketch[0])
 
         towerPart2 = myModel.Part(name='towerPart2', dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-        towerPart2.BaseWire(sketch=self.modelSketch.towerSketch[1])
+        towerPart2.BaseWire(sketch=self.structureSketch.towerSketch[1])
 
         self.towerPart=(towerPart1,towerPart2)
 
@@ -328,13 +344,13 @@ class StructurePart(object):
         Raises:
         """ 
         stiffeningGirderPart = myModel.Part(name='beamPart', dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-        stiffeningGirderPart.BaseWire(sketch=self.modelSketch.stiffeningGirderSketch)
+        stiffeningGirderPart.BaseWire(sketch=self.structureSketch.stiffeningGirderSketch)
         self.stiffeningGirderPart=stiffeningGirderPart
 
         self.girderRigidarmPart=[]
-        for i in range(len(self.modelSketch.girderRigidarmSketch)):
+        for i in range(len(self.structureSketch.girderRigidarmSketch)):
             girderRigidarmPart = myModel.Part(name='girderRigidarmPart'+str(i+1), dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-            girderRigidarmPart.BaseWire(sketch=self.modelSketch.girderRigidarmSketch[i])
+            girderRigidarmPart.BaseWire(sketch=self.structureSketch.girderRigidarmSketch[i])
             self.girderRigidarmPart.append(girderRigidarmPart)
         
         self.girderRigidarmPart=tuple(self.girderRigidarmPart)
@@ -354,10 +370,10 @@ class StructurePart(object):
         """
 
         cablePart1 = myModel.Part(name='cablePart1', dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-        cablePart1.BaseWire(sketch=self.modelSketch.cableSketch[0])
+        cablePart1.BaseWire(sketch=self.structureSketch.cableSketch[0])
 
         cablePart2 = myModel.Part(name='cablePart2', dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-        cablePart2.BaseWire(sketch=self.modelSketch.cableSketch[1])
+        cablePart2.BaseWire(sketch=self.structureSketch.cableSketch[1])
 
         self.cablePart=(cablePart1,cablePart2)
 
@@ -374,11 +390,11 @@ class StructurePart(object):
         Raises:
         """
         self.suspenderPart=[]
-        for i in range(len(self.modelSketch.suspenderSketch)):
+        for i in range(len(self.structureSketch.suspenderSketch)):
             suspenderPart=[]
-            for j in range(len(self.modelSketch.suspenderSketch[0])):
+            for j in range(len(self.structureSketch.suspenderSketch[0])):
                 sP = myModel.Part(name='suspenderPart'+str(i+1)+'-'+str(j+1), dimensionality=part.THREE_D, type=part.DEFORMABLE_BODY)
-                sP.BaseWire(sketch=self.modelSketch.suspenderSketch[i][j])
+                sP.BaseWire(sketch=self.structureSketch.suspenderSketch[i][j])
                 suspenderPart.append(sP)
             self.suspenderPart.append(tuple(suspenderPart))
         
@@ -389,8 +405,8 @@ class StructurePart(object):
 class StructureAssembly(object):
     """Create 'Assembly' of the structure"""
 
-    def __init__(self,modelPart):
-        self.modelPart=modelPart
+    def __init__(self,structurePart):
+        self.structurePart=structurePart
 
     def CreateAssembly(self,structureGeometry):
         """Create Assembly
@@ -429,7 +445,7 @@ class StructureAssembly(object):
         p = myModel.parts['beamPart']
         myAssembly.Instance(name='beamInstance', part=p, dependent=ON)
 
-        for i in range(len(self.modelPart.girderRigidarmPart)):       
+        for i in range(len(self.structurePart.girderRigidarmPart)):       
             p = myModel.parts['girderRigidarmPart'+str(i+1)]
             myAssembly.Instance(name='girderRigidarmInstance'+str(i+1), part=p, dependent=ON)
 
@@ -439,8 +455,8 @@ class StructureAssembly(object):
         myAssembly.Instance(name='cableInstance2', part=p, dependent=ON)
 
 
-        for i in range(len(self.modelPart.suspenderPart)):
-            for j in range(len(self.modelPart.suspenderPart[0])):
+        for i in range(len(self.structurePart.suspenderPart)):
+            for j in range(len(self.structurePart.suspenderPart[0])):
                 p = myModel.parts['suspenderPart'+str(i+1)+'-'+str(j+1)]
                 myAssembly.Instance(name='suspenderInstance'+str(i+1)+'-'+str(j+1), part=p, dependent=ON)
 
@@ -455,11 +471,11 @@ class StructureAssembly(object):
 
         Raises:
         """
-        self.__moveTowerInstance()
-        self.__moveStiffeningGirderInstance()
-        self.__moveGirderRigidarmInstance(structureGeometry)
-        self.__moveCableInstance()
-        self.__moveSuspenderInstance(structureGeometry)
+        self.__MoveTowerInstance()
+        self.__MoveStiffeningGirderInstance()
+        self.__MoveGirderRigidarmInstance(structureGeometry)
+        self.__MoveCableInstance()
+        self.__MoveSuspenderInstance(structureGeometry)
 
     def __MergeInstance(self):
         """Merge Instance
@@ -472,9 +488,61 @@ class StructureAssembly(object):
 
         Raises:
         """
-        pass
+        a1 = mdb.models['GuoxiSuspensionBridge'].rootAssembly
+        a1.InstanceFromBooleanMerge(name='PartAll', instances=(
+            a1.instances['towerInstance1'], a1.instances['towerInstance2'], 
+            a1.instances['beamInstance'], a1.instances['girderRigidarmInstance1'], 
+            a1.instances['girderRigidarmInstance2'], 
+            a1.instances['girderRigidarmInstance3'], 
+            a1.instances['girderRigidarmInstance4'], 
+            a1.instances['girderRigidarmInstance5'], 
+            a1.instances['girderRigidarmInstance6'], 
+            a1.instances['girderRigidarmInstance7'], 
+            a1.instances['girderRigidarmInstance8'], 
+            a1.instances['girderRigidarmInstance9'], 
+            a1.instances['girderRigidarmInstance10'], 
+            a1.instances['girderRigidarmInstance11'], 
+            a1.instances['girderRigidarmInstance12'], 
+            a1.instances['girderRigidarmInstance13'], 
+            a1.instances['girderRigidarmInstance14'], 
+            a1.instances['girderRigidarmInstance15'], 
+            a1.instances['girderRigidarmInstance16'], 
+            a1.instances['girderRigidarmInstance17'], 
+            a1.instances['girderRigidarmInstance18'], 
+            a1.instances['girderRigidarmInstance19'], a1.instances['cableInstance1'], 
+            a1.instances['cableInstance2'], a1.instances['suspenderInstance1-1'], 
+            a1.instances['suspenderInstance1-2'], a1.instances['suspenderInstance1-3'], 
+            a1.instances['suspenderInstance1-4'], a1.instances['suspenderInstance1-5'], 
+            a1.instances['suspenderInstance1-6'], a1.instances['suspenderInstance1-7'], 
+            a1.instances['suspenderInstance1-8'], a1.instances['suspenderInstance1-9'], 
+            a1.instances['suspenderInstance1-10'], 
+            a1.instances['suspenderInstance1-11'], 
+            a1.instances['suspenderInstance1-12'], 
+            a1.instances['suspenderInstance1-13'], 
+            a1.instances['suspenderInstance1-14'], 
+            a1.instances['suspenderInstance1-15'], 
+            a1.instances['suspenderInstance1-16'], 
+            a1.instances['suspenderInstance1-17'], 
+            a1.instances['suspenderInstance1-18'], 
+            a1.instances['suspenderInstance1-19'], 
+            a1.instances['suspenderInstance2-1'], a1.instances['suspenderInstance2-2'], 
+            a1.instances['suspenderInstance2-3'], a1.instances['suspenderInstance2-4'], 
+            a1.instances['suspenderInstance2-5'], a1.instances['suspenderInstance2-6'], 
+            a1.instances['suspenderInstance2-7'], a1.instances['suspenderInstance2-8'], 
+            a1.instances['suspenderInstance2-9'], 
+            a1.instances['suspenderInstance2-10'], 
+            a1.instances['suspenderInstance2-11'], 
+            a1.instances['suspenderInstance2-12'], 
+            a1.instances['suspenderInstance2-13'], 
+            a1.instances['suspenderInstance2-14'], 
+            a1.instances['suspenderInstance2-15'], 
+            a1.instances['suspenderInstance2-16'], 
+            a1.instances['suspenderInstance2-17'], 
+            a1.instances['suspenderInstance2-18'], 
+            a1.instances['suspenderInstance2-19'], ), originalInstances=SUPPRESS, 
+            domain=GEOMETRY)
 
-    def __moveTowerInstance(self):
+    def __MoveTowerInstance(self):
         myAssembly.translate(instanceList=('towerInstance1', ), vector=(0.0, 0.0, -3.75))
         myAssembly.rotate(instanceList=('towerInstance1', ), axisPoint=(25.0, (3.3+20.44)/2, -3.75), 
             axisDirection=(0.0, 8.57, 0.0), angle=-90.0)
@@ -483,21 +551,21 @@ class StructureAssembly(object):
         myAssembly.rotate(instanceList=('towerInstance2', ), axisPoint=(95.0, (3.3+20.44)/2, -3.75), 
             axisDirection=(0.0, 8.57, 0.0), angle=-90.0)
     
-    def __moveStiffeningGirderInstance(self):
+    def __MoveStiffeningGirderInstance(self):
         pass
 
-    def __moveGirderRigidarmInstance(self,structureGeometry):
+    def __MoveGirderRigidarmInstance(self,structureGeometry):
         rGR=structureGeometry.rGirderRigidarmCoordinate
 
-        for i in range(len(self.modelPart.girderRigidarmPart)): 
+        for i in range(len(self.structurePart.girderRigidarmPart)): 
             myAssembly.rotate(instanceList=('girderRigidarmInstance'+str(i+1), ), axisPoint=rGR[i],
                 axisDirection=(0, 1, 0), angle=90.0)
 
-    def __moveCableInstance(self):
+    def __MoveCableInstance(self):
         myAssembly.translate(instanceList=('cableInstance1', ), vector=(0.0, 0.0, -3.75))
         myAssembly.translate(instanceList=('cableInstance2', ), vector=(0.0, 0.0, 3.75))
 
-    def __moveSuspenderInstance(self,structureGeometry):
+    def __MoveSuspenderInstance(self,structureGeometry):
         """move Suspender Instance
         
         function summary
@@ -508,8 +576,8 @@ class StructureAssembly(object):
 
         Raises:
         """
-        for i in range(len(self.modelPart.suspenderPart)):
-            for j in range(len(self.modelPart.suspenderPart[0])):
+        for i in range(len(self.structurePart.suspenderPart)):
+            for j in range(len(self.structurePart.suspenderPart[0])):
                 myAssembly.translate(instanceList=('suspenderInstance'+str(i+1)+'-'+str(j+1), ), vector=(0.0, 0.0, structureGeometry.rRigidarmSuspenderCoordinate[i][0][2]))
 
 class StructureRegion(object):
@@ -520,6 +588,16 @@ class StructureRegion(object):
 
     def CreateRegion(self):
         pass
+
+    def CreateGirderRegion(self):
+        p = mdb.models['GuoxiSuspensionBridge'].parts['PartAll']
+        e = p.edges
+        edges = e.findAt(((11.25, 8.189375, 0.0), ))
+        region=p.Set(edges=edges, name='Set-1')
+        p = mdb.models['GuoxiSuspensionBridge'].parts['PartAll']
+        p.assignBeamSectionOrientation(region=region, method=N1_COSINES, n1=(0.0, 0.0, 
+            -1.0))
+        #: Beam orientations have been assigned to the selected regions.
 
 class StructureInteraction(object):
     """Create 'Interaction' of the structure"""
@@ -734,8 +812,6 @@ class StructureProperty(object):
 class StructureStep(object):
     """define the step"""
 
-     
-
     def __init__(self):
         pass
 
@@ -777,6 +853,24 @@ class StructureLoad(object):
         """
         pass
 
+    def CreatePredefinedField():
+        """create the predefined field of the structure
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
 class StructureMesh(object):
     """mesh the structrue"""
 
@@ -816,20 +910,20 @@ myModel = mdb.Model(name=modelName)
 #-----------------------------------------------------
 
 # Create geometry
-bg=StructureGeometry()
+bridgeGeometry=StructureGeometry()
 
 #-----------------------------------------------------
 
 # Create a sketch
-bs=StructureSketch()
-bs.CreateSketch(bg)
+bridgeSketch=StructureSketch(bridgeGeometry)
+bridgeSketch.CreateSketch()
 
 #-----------------------------------------------------
 
 #Create parts
 import part
-bp=StructurePart(bs)
-bp.CreatePart(part)
+bridgePart=StructurePart(bridgeSketch)
+bridgePart.CreatePart()
 
 #-----------------------------------------------------
 
@@ -839,8 +933,8 @@ from abaqusConstants import *
 myAssembly=myModel.rootAssembly
 myAssembly.DatumCsysByDefault(CARTESIAN)
 
-ba=StructureAssembly(bp)
-ba.CreateAssembly(bg)
+ba=StructureAssembly(bridgePart)
+ba.CreateAssembly(bridgeGeometry)
 
 bPro=StructureProperty()
 bPro.CreateProperty()
