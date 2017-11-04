@@ -60,7 +60,8 @@ class StructureGeometry(object):
     #suspender
 
     def __init__(self):
-        self.__SetCableCoordinate()     #calc the cable coordinate
+        self.__SetCableCoordinate()    #calc the cable coordinate
+        self.__SetStiffeningGirderCoordinate() 
 
     def __SetCableCoordinate(self):
         """set the cable coordinate
@@ -96,7 +97,35 @@ class StructureGeometry(object):
             lst.append(aP[i][1])
             cableCoordinate.append(tuple(lst))
         cableCoordinate=tuple(cableCoordinate)
-        self.cableCoordinate=cableCoordinate    
+        self.cableCoordinate=cableCoordinate
+    
+    def __SetStiffeningGirderCoordinate(self):
+        """set the stiffening girder coordinate
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        eP=self.EndPointCoordinate
+        rGR=self.rGirderRigidarmCoordinate
+        rRS=self.rRigidarmSuspenderCoordinate
+
+        lst=[]
+        lst.append(eP[0])
+        for i in range(len(rGR)):
+            lst.append(rGR[i])
+        lst.append(eP[1])
+        self.stiffeningGirderCoordinate=tuple(lst)    
 
 class StructureSketch(object):
     """Create 'Sketch' of the structure"""
@@ -207,7 +236,6 @@ class StructureSketch(object):
         self.stiffeningGirderSketch=mySketch
       
 
-    
     def __CreateGirderRigidarmSketch(self):
         """Create Girder Rigidarm Sketch
         
@@ -580,16 +608,165 @@ class StructureAssembly(object):
             for j in range(len(self.structurePart.suspenderPart[0])):
                 myAssembly.translate(instanceList=('suspenderInstance'+str(i+1)+'-'+str(j+1), ), vector=(0.0, 0.0, structureGeometry.rRigidarmSuspenderCoordinate[i][0][2]))
 
-class StructureRegion(object):
-    """store abaqus region of the structure"""
+class StructureRegionSet(object):
+    """store abaqus region set of the structure"""
 
-    def __init__(self):
-        pass
+    def __init__(self,structureGeometry):
+        """init
 
-    def CreateRegion(self):
-        pass
+        Required argument:
 
-    def CreateGirderRegion(self):
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        self.structureGeometry=structureGeometry
+
+    def CreateRegionSet(self):
+        """Create Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        self.__CreateTowerRegionSet()
+        self.__CreateGirderRegionSet()
+        self.__CreateCableRegionSet()
+        self.__CreateSuspenderRegionSet()
+
+
+    def __CreateTowerRegionSet(self):
+        """Create tower region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        self.__CreateDownTowerRegionSet()
+        self.__CreateUpTowerRegionSet()
+        self.__CreateTowerBeamRegionSet()
+
+
+    def __CreateDownTowerRegionSet(self):
+        """Create down tower region set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+        rUT=self.structureGeometry.rUpDownTowerCoordinate
+        dTB=self.structureGeometry.downTowerBottomCoordinate
+
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+        for i in range(len(rUT)):
+            for j in range(len(rUT[i])):  
+                edges = e.findAt(((coff*(rUT[i][j][0]+dTB[i][j][0]), coff*(rUT[i][j][1]+dTB[i][j][1]), coff*(rUT[i][j][2]+dTB[i][j][2])),))
+                p.Set(edges=edges, name='downTowerSet'+str(i+1)+'-'+str(j+1))
+
+    def __CreateUpTowerRegionSet(self):
+        """Create up tower Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+        uTT=self.structureGeometry.upTowerTopCoordinate
+        rUT=self.structureGeometry.rUpDownTowerCoordinate
+
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+        for i in range(len(uTT)):
+            for j in range(len(uTT[i])):  
+                edges = e.findAt(((coff*(uTT[i][j][0]+rUT[i][j][0]), coff*(uTT[i][j][1]+rUT[i][j][1]), coff*(uTT[i][j][2]+rUT[i][j][2])),))
+                p.Set(edges=edges, name='upTowerSet'+str(i+1)+'-'+str(j+1))
+
+    def __CreateTowerBeamRegionSet(self):
+        """Create region set of the beam of the tower
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+        upTowerTopCoordinate=(((25,20.44,-3.75),(25,20.44,3.75)),
+                                    ((95,20.44,-3.75),(95,20.44,3.75)))
+
+        uTT=self.structureGeometry.upTowerTopCoordinate
+
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+        for i in range(len(uTT)):
+                edges = e.findAt(((coff*(uTT[i][0][0]+uTT[i][1][0]), coff*(uTT[i][0][1]+uTT[i][1][1]), coff*(uTT[i][0][2]+uTT[i][1][2])),))
+                p.Set(edges=edges, name='towerBeamSet'+str(i+1))
+
+
+    def __CreateGirderRegionSet(self):
+        """Create Girder Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
         p = mdb.models['GuoxiSuspensionBridge'].parts['PartAll']
         e = p.edges
         edges = e.findAt(((11.25, 8.189375, 0.0), ))
@@ -598,6 +775,191 @@ class StructureRegion(object):
         p.assignBeamSectionOrientation(region=region, method=N1_COSINES, n1=(0.0, 0.0, 
             -1.0))
         #: Beam orientations have been assigned to the selected regions.
+
+        self.__CreateGirderA_ARegionSet()
+        self.__CreateGirderB_BRegionSet()
+        self.__CreateGirderC_CRegionSet()
+        self.__CreateGirderD_DRegionSet()
+        self.__CreateGirderE_ERegionSet()
+        self.__CreateGirderF_FRegionSet()
+        self.__CreateGirderRigidarmRegionSet()
+
+    def __CreateGirderA_ARegionSet(self):
+        """Create Girder A-A Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        sG=self.structureGeometry.stiffeningGirderCoordinate
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+        for i in range(len(sG)-1):
+            edges = e.findAt(((coff*(sG[i][0]+sG[i+1][0]), coff*(sG[i][1]+sG[i+1][1]), coff*(sG[i][2]+sG[i+1][2])),))
+            p.Set(edges=edges, name='girderSet'+str(i+1))
+
+    def __CreateGirderB_BRegionSet(self):
+        """Create Girder B-B Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __CreateGirderC_CRegionSet(self):
+        """Create Girder C-C Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __CreateGirderD_DRegionSet(self):
+        """Create Girder D-D Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __CreateGirderE_ERegionSet(self):
+        """Create Girder E-E Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __CreateGirderF_FRegionSet(self):
+        """Create Girder F-F Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __CreateGirderRigidarmRegionSet(self):
+        """Create Girder Rigidarm Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __CreateCableRegionSet(self):
+        """Create Cable Region Set
+        create each section of a cable a set 
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        c=self.structureGeometry.cableCoordinate
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+        for i in range(len(c)):
+            for j in range(len(c[i])-1):  
+                edges = e.findAt(((coff*(c[i][j][0]+c[i][j+1][0]), coff*(c[i][j][1]+c[i][j+1][1]), coff*(c[i][j][2]+c[i][j+1][2])),))
+                p.Set(edges=edges, name='cableSet'+str(i+1)+'-'+str(j+1))
+            
+
+    def __CreateSuspenderRegionSet(self):
+        """Create Suspender Region Set
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        rRS=self.structureGeometry.rRigidarmSuspenderCoordinate
+        hP=self.structureGeometry.hangingPointCoordinate
+
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+        for i in range(len(rRS)):
+            for j in range(len(rRS[i])):     
+                edges = e.findAt(((coff*(rRS[i][j][0]+hP[i][j][0]), coff*(rRS[i][j][1]+hP[i][j][1]), coff*(rRS[i][j][2]+hP[i][j][2])),))
+                p.Set(edges=edges, name='suspenderSet'+str(i+1)+'-'+str(j+1))    
 
 class StructureInteraction(object):
     """Create 'Interaction' of the structure"""
@@ -933,8 +1295,16 @@ from abaqusConstants import *
 myAssembly=myModel.rootAssembly
 myAssembly.DatumCsysByDefault(CARTESIAN)
 
+
 ba=StructureAssembly(bridgePart)
 ba.CreateAssembly(bridgeGeometry)
 
+#-----------------------------------------------------
+#Create property
 bPro=StructureProperty()
 bPro.CreateProperty()
+
+#-----------------------------------------------------
+#Create region set
+bridgeRegionSet=StructureRegionSet(bridgeGeometry)
+bridgeRegionSet.CreateRegionSet()
