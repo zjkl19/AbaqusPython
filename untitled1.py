@@ -19,4 +19,4 @@ hangingPointCoordinate=(((10,11.270569,-3.75),(15,13.906819,-3.75),(20,16.903937
 
 
 
-print(list(hangingPointCoordinate[0]))
+print(hangingPointCoordinate[0][1][0][0])

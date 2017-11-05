@@ -821,9 +821,14 @@ class StructureRegionSet(object):
         p = myModel.parts['PartAll']
         e = p.edges
         coff=0.5    #get middle point
+
+        lst=[]
         for i in range(len(sG)-1):
             edges = e.findAt(((coff*(sG[i][0]+sG[i+1][0]), coff*(sG[i][1]+sG[i+1][1]), coff*(sG[i][2]+sG[i+1][2])),))
-            p.Set(edges=edges, name='girderSet'+str(i+1))
+            pSet=p.Set(edges=edges, name='girderSet'+str(i+1))
+            lst.append(pSet)
+
+        self.girderRegionSet=tuple(lst)
 
     def __CreateGirderB_BRegionSet(self):
         """Create Girder B-B Region Set
@@ -925,7 +930,25 @@ class StructureRegionSet(object):
 
         None.
         """
-        pass
+
+        rRS=self.structureGeometry.rRigidarmSuspenderCoordinate
+        rGR=self.structureGeometry.rGirderRigidarmCoordinate
+
+        p = myModel.parts['PartAll']
+        e = p.edges
+        coff=0.5    #get middle point
+
+        self.girderRigidarmRegionSet=[]
+        
+        for i in range(len(rRS)):
+            lst=[]
+            for j in range(len(rRS[i])-1):
+                edges = e.findAt(((coff*(rRS[i][j][0]+rGR[j][0]), coff*(rRS[i][j][1]+rGR[j][1]), coff*(rRS[i][j][2]+rGR[j][2])),))
+                pSet=p.Set(edges=edges, name='girderRigidarm'+str(i+1)+'-'+str(j+1))
+                lst.append(pSet)
+            self.girderRigidarmRegionSet.append(tuple(lst))
+        
+        self.girderRigidarmRegionSet=tuple(self.girderRigidarmRegionSet)
 
     def __CreateCableRegionSet(self):
         """Create Cable Region Set
@@ -1028,6 +1051,7 @@ class StructureProperty(object):
         self.__CreateSection()
 
         self.__SectionAssignment()
+        self.__AssignBeamSectionOrientation()
     
     def __CreateMaterial(self):
         """create the material
@@ -1196,6 +1220,7 @@ class StructureProperty(object):
         self.__AssignGirderSection()
         self.__AssignCableSection()
         self.__AssignSuspenderSection()
+
  
     def __AssignTowerSection(self):
         """Assign tower section
@@ -1331,7 +1356,14 @@ class StructureProperty(object):
 
         None.
         """
-        pass
+        r=self.structureRegionSet.girderRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            myPart.SectionAssignment(region=r[i], sectionName='A-ASection', offset=0.0, 
+                offsetType=MIDDLE_SURFACE, offsetField='', 
+                thicknessAssignment=FROM_SECTION)
 
     def __AssignGirderB_BSection(self):
         """Create Girder B-B Section
@@ -1488,9 +1520,8 @@ class StructureProperty(object):
                     offsetType=MIDDLE_SURFACE, offsetField='', 
                     thicknessAssignment=FROM_SECTION)
 
-
-    def AssignBeamSectionOrientation(self):
-        """assign the truss and beam section orientation
+    def __AssignBeamSectionOrientation(self):
+        """assign the beam section orientation
 
         must operate manually
 
@@ -1506,8 +1537,225 @@ class StructureProperty(object):
 
         None.
         """     
+        self.__AssignTowerSectionOrientation()
+        self.__AssignGirderBeamSectionOrientation()
+        self.__AssignCableBeamSectionOrientation()
+        self.__AssignSuspenderBeamSectionOrientation()
+
+    def __AssignTowerSectionOrientation(self):
+        """assign the tower section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """ 
+        self.__AssignDownTowerBeamSectionOrientation()
+        self.__AssignUpTowerBeamSectionOrientation()
+        self.__AssignTowerBeamBeamSectionOrientation()
+
+    def __AssignDownTowerBeamSectionOrientation(self):
+        """assign the down tower section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        r=self.structureRegionSet.downTowerRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.assignBeamSectionOrientation(region=r[i][j], method=N1_COSINES, n1=(0.0, 0.0, -1.0))
+ 
+    def __AssignUpTowerBeamSectionOrientation(self):
+        """assign the up tower section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        r=self.structureRegionSet.upTowerRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.assignBeamSectionOrientation(region=r[i][j], method=N1_COSINES, n1=(0.0, 0.0, -1.0))
+
+    def __AssignTowerBeamBeamSectionOrientation(self):
+        """assign the tower beam section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        r=self.structureRegionSet.towerBeamRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            myPart.assignBeamSectionOrientation(region=r[i], method=N1_COSINES, n1=(-1.0, 0.0, 0.0))
+
+
+    def __AssignGirderBeamSectionOrientation(self):
+        """assign the girder beam section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        self.__AssignGirderA_ABeamSectionOrientation()
+        self.__AssignGirderB_BBeamSectionOrientation()
+        self.__AssignGirderC_CBeamSectionOrientation()
+        self.__AssignGirderD_DBeamSectionOrientation()
+        self.__AssignGirderE_EBeamSectionOrientation()
+        self.__AssignGirderF_FBeamSectionOrientation()
+        self.__AssignGirderRigidarmBeamSectionOrientation()
+
+    def __AssignGirderA_ABeamSectionOrientation(self):
+        """assign the girder A-A beam section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        r=self.structureRegionSet.girderRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            myPart.assignBeamSectionOrientation(region=r[i], method=N1_COSINES, n1=(0.0, 0.0, -1.0))
+
+    
+    def __AssignGirderB_BBeamSectionOrientation(self):
         pass
 
+    def __AssignGirderC_CBeamSectionOrientation(self):
+        pass
+
+    def __AssignGirderD_DBeamSectionOrientation(self):
+        pass
+
+    def __AssignGirderE_EBeamSectionOrientation(self):
+        pass
+
+    def __AssignGirderF_FBeamSectionOrientation(self):
+        pass
+
+    def __AssignGirderRigidarmBeamSectionOrientation(self):
+        pass
+
+    def __AssignCableBeamSectionOrientation(self):
+        """assign the cable beam section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        r=self.structureRegionSet.cableRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.assignBeamSectionOrientation(region=r[i][j], method=N1_COSINES, n1=(0.0, 0.0, -1.0))
+
+    def __AssignSuspenderBeamSectionOrientation(self):
+        """assign the suspender section orientation
+
+        must operate manually
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        r=self.structureRegionSet.suspenderRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.assignBeamSectionOrientation(region=r[i][j], method=N1_COSINES, n1=(0.0, 0.0, -1.0))    
+ 
 
 class StructureStep(object):
     """define the step"""
