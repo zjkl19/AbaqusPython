@@ -691,10 +691,17 @@ class StructureRegionSet(object):
         p = myModel.parts['PartAll']
         e = p.edges
         coff=0.5    #get middle point
+
+        downTowerRegionSet=[]
+
         for i in range(len(rUT)):
+            lst=[]
             for j in range(len(rUT[i])):  
                 edges = e.findAt(((coff*(rUT[i][j][0]+dTB[i][j][0]), coff*(rUT[i][j][1]+dTB[i][j][1]), coff*(rUT[i][j][2]+dTB[i][j][2])),))
-                p.Set(edges=edges, name='downTowerSet'+str(i+1)+'-'+str(j+1))
+                pSet=p.Set(edges=edges, name='downTowerSet'+str(i+1)+'-'+str(j+1))
+                lst.append(pSet)
+            downTowerRegionSet.append(tuple(lst))
+        self.downTowerRegionSet=downTowerRegionSet
 
     def __CreateUpTowerRegionSet(self):
         """Create up tower Region Set
@@ -718,10 +725,17 @@ class StructureRegionSet(object):
         p = myModel.parts['PartAll']
         e = p.edges
         coff=0.5    #get middle point
+
+        upTowerRegionSet=[]
+
         for i in range(len(uTT)):
+            lst=[]
             for j in range(len(uTT[i])):  
                 edges = e.findAt(((coff*(uTT[i][j][0]+rUT[i][j][0]), coff*(uTT[i][j][1]+rUT[i][j][1]), coff*(uTT[i][j][2]+rUT[i][j][2])),))
-                p.Set(edges=edges, name='upTowerSet'+str(i+1)+'-'+str(j+1))
+                pSet=p.Set(edges=edges, name='upTowerSet'+str(i+1)+'-'+str(j+1))
+                lst.append(pSet)
+            upTowerRegionSet.append(tuple(lst))
+        self.upTowerRegionSet=upTowerRegionSet
 
     def __CreateTowerBeamRegionSet(self):
         """Create region set of the beam of the tower
@@ -747,10 +761,14 @@ class StructureRegionSet(object):
         p = myModel.parts['PartAll']
         e = p.edges
         coff=0.5    #get middle point
+        
+        
+        lst=[]
         for i in range(len(uTT)):
-                edges = e.findAt(((coff*(uTT[i][0][0]+uTT[i][1][0]), coff*(uTT[i][0][1]+uTT[i][1][1]), coff*(uTT[i][0][2]+uTT[i][1][2])),))
-                p.Set(edges=edges, name='towerBeamSet'+str(i+1))
-
+            edges = e.findAt(((coff*(uTT[i][0][0]+uTT[i][1][0]), coff*(uTT[i][0][1]+uTT[i][1][1]), coff*(uTT[i][0][2]+uTT[i][1][2])),))
+            pSet=p.Set(edges=edges, name='towerBeamSet'+str(i+1))
+            lst.append(pSet)
+        self.towerBeamRegionSet=tuple(lst)
 
     def __CreateGirderRegionSet(self):
         """Create Girder Region Set
@@ -964,10 +982,18 @@ class StructureRegionSet(object):
         p = myModel.parts['PartAll']
         e = p.edges
         coff=0.5    #get middle point
+
+        self.suspenderRegionSet=[]
+
         for i in range(len(rRS)):
+            lst=[]
             for j in range(len(rRS[i])):     
                 edges = e.findAt(((coff*(rRS[i][j][0]+hP[i][j][0]), coff*(rRS[i][j][1]+hP[i][j][1]), coff*(rRS[i][j][2]+hP[i][j][2])),))
-                p.Set(edges=edges, name='suspenderSet'+str(i+1)+'-'+str(j+1))    
+                pSet=p.Set(edges=edges, name='suspenderSet'+str(i+1)+'-'+str(j+1))
+                lst.append(pSet)    
+            self.suspenderRegionSet.append(tuple(lst))
+        
+        self.suspenderRegionSet=tuple(self.suspenderRegionSet)
 
 class StructureInteraction(object):
     """Create 'Interaction' of the structure"""
@@ -1207,6 +1233,15 @@ class StructureProperty(object):
         None.
         """
 
+        r=self.structureRegionSet.downTowerRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.SectionAssignment(region=r[i][j], sectionName='downTowerSection', offset=0.0, 
+                    offsetType=MIDDLE_SURFACE, offsetField='', 
+                    thicknessAssignment=FROM_SECTION)
 
     def __AssignUpTowerSection(self):
         """assign up tower section
@@ -1223,6 +1258,15 @@ class StructureProperty(object):
 
         None.
         """
+        r=self.structureRegionSet.upTowerRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.SectionAssignment(region=r[i][j], sectionName='upTowerSection', offset=0.0, 
+                    offsetType=MIDDLE_SURFACE, offsetField='', 
+                    thicknessAssignment=FROM_SECTION)
 
     def __AssignTowerBeamSection(self):
         """assign section of the beam of the tower
@@ -1239,6 +1283,14 @@ class StructureProperty(object):
 
         None.
         """
+        r=self.structureRegionSet.towerBeamRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            myPart.SectionAssignment(region=r[i], sectionName='towerBeamSection', offset=0.0, 
+                offsetType=MIDDLE_SURFACE, offsetField='', 
+                thicknessAssignment=FROM_SECTION)
 
     def __AssignGirderSection(self):
         """Create Girder Section
@@ -1426,6 +1478,15 @@ class StructureProperty(object):
         None.
         """
 
+        r=self.structureRegionSet.suspenderRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.SectionAssignment(region=r[i][j], sectionName='suspenderSection', offset=0.0, 
+                    offsetType=MIDDLE_SURFACE, offsetField='', 
+                    thicknessAssignment=FROM_SECTION)
 
 
     def AssignBeamSectionOrientation(self):
