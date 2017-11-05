@@ -929,10 +929,18 @@ class StructureRegionSet(object):
         p = myModel.parts['PartAll']
         e = p.edges
         coff=0.5    #get middle point
+
+        self.cableRegionSet=[]
+        
         for i in range(len(c)):
+            lst=[]
             for j in range(len(c[i])-1):  
                 edges = e.findAt(((coff*(c[i][j][0]+c[i][j+1][0]), coff*(c[i][j][1]+c[i][j+1][1]), coff*(c[i][j][2]+c[i][j+1][2])),))
-                p.Set(edges=edges, name='cableSet'+str(i+1)+'-'+str(j+1))
+                pSet=p.Set(edges=edges, name='cableSet'+str(i+1)+'-'+str(j+1))
+                lst.append(pSet)
+            self.cableRegionSet.append(tuple(lst))
+        
+        self.cableRegionSet=tuple(self.cableRegionSet)
             
 
     def __CreateSuspenderRegionSet(self):
@@ -971,8 +979,8 @@ class StructureInteraction(object):
 class StructureProperty(object):
     """Properties of the structure, including material, profile, section"""
 
-    def __init__(self):
-        pass
+    def __init__(self,structureRegionSet):
+        self.structureRegionSet=structureRegionSet
 
     def CreateProperty(self):
         """set the material, profile and section property
@@ -992,6 +1000,8 @@ class StructureProperty(object):
         self.__CreateMaterial()
         self.__CreateProfile()
         self.__CreateSection()
+
+        self.__SectionAssignment()
     
     def __CreateMaterial(self):
         """create the material
@@ -1057,6 +1067,8 @@ class StructureProperty(object):
 
         upTowerProfile=myModel.RectangularProfile(name='upTowerProfile', a=0.9, b=1.4)
 
+        towerBeamProfile=myModel.RectangularProfile(name='towerBeamProfile', a=0.8, b=0.76)
+
 
 
         #girder profile
@@ -1105,6 +1117,10 @@ class StructureProperty(object):
               integration=BEFORE_ANALYSIS, profile='upTowerProfile', 
               material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
 
+        towerBeamSection=myModel.BeamSection(name='towerBeamSection', 
+              integration=BEFORE_ANALYSIS, profile='towerBeamProfile',
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+
         #girder section
         A_ASection=myModel.BeamSection(name='A-ASection', 
               integration=BEFORE_ANALYSIS, profile='A-AProfile', 
@@ -1133,7 +1149,7 @@ class StructureProperty(object):
         suspenderSection=myModel.TrussSection(name='suspenderSection', material='suspenderMaterial', 
             area=A)	
        
-    def SectionAssignment(self):
+    def __SectionAssignment(self):
         """assign the truss and beam section
 
         must operate manually
@@ -1150,7 +1166,267 @@ class StructureProperty(object):
 
         None.
         """     
-        pass   
+        self.__AssignTowerSection()
+        self.__AssignGirderSection()
+        self.__AssignCableSection()
+        self.__AssignSuspenderSection()
+ 
+    def __AssignTowerSection(self):
+        """Assign tower section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        self.__AssignDownTowerSection()
+        self.__AssignUpTowerSection()
+        self.__AssignTowerBeamSection()
+
+
+    def __AssignDownTowerSection(self):
+        """assign down tower section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+
+    def __AssignUpTowerSection(self):
+        """assign up tower section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+    def __AssignTowerBeamSection(self):
+        """assign section of the beam of the tower
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+    def __AssignGirderSection(self):
+        """Create Girder Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+        self.__AssignGirderA_ASection()
+        self.__AssignGirderB_BSection()
+        self.__AssignGirderC_CSection()
+        self.__AssignGirderD_DSection()
+        self.__AssignGirderE_ESection()
+        self.__AssignGirderF_FSection()
+        self.__AssignGirderRigidarmSection()
+
+    def __AssignGirderA_ASection(self):
+        """Create Girder A-A Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignGirderB_BSection(self):
+        """Create Girder B-B Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignGirderC_CSection(self):
+        """Create Girder C-C Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignGirderD_DSection(self):
+        """Create Girder D-D Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignGirderE_ESection(self):
+        """Create Girder E-E Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignGirderF_FSection(self):
+        """Create Girder F-F Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignGirderRigidarmSection(self):
+        """Create Girder Rigidarm Section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+        pass
+
+    def __AssignCableSection(self):
+        """assign cable section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+        r=self.structureRegionSet.cableRegionSet
+
+        myPart = myModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.SectionAssignment(region=r[i][j], sectionName='cableSection', offset=0.0, 
+                    offsetType=MIDDLE_SURFACE, offsetField='', 
+                    thicknessAssignment=FROM_SECTION)
+            
+
+    def __AssignSuspenderSection(self):
+        """assign suspender section
+
+        Required argument:
+
+        Optional arguments:
+
+        None.
+
+        Return value:
+
+        Exceptions:
+
+        None.
+        """
+
+
 
     def AssignBeamSectionOrientation(self):
         """assign the truss and beam section orientation
@@ -1170,6 +1446,7 @@ class StructureProperty(object):
         None.
         """     
         pass
+
 
 class StructureStep(object):
     """define the step"""
@@ -1296,15 +1573,16 @@ myAssembly=myModel.rootAssembly
 myAssembly.DatumCsysByDefault(CARTESIAN)
 
 
-ba=StructureAssembly(bridgePart)
-ba.CreateAssembly(bridgeGeometry)
-
-#-----------------------------------------------------
-#Create property
-bPro=StructureProperty()
-bPro.CreateProperty()
+bridgeAssembly=StructureAssembly(bridgePart)
+bridgeAssembly.CreateAssembly(bridgeGeometry)
 
 #-----------------------------------------------------
 #Create region set
 bridgeRegionSet=StructureRegionSet(bridgeGeometry)
 bridgeRegionSet.CreateRegionSet()
+
+#-----------------------------------------------------
+#Create property
+bridgeProperty=StructureProperty(bridgeRegionSet)
+bridgeProperty.CreateProperty()
+
