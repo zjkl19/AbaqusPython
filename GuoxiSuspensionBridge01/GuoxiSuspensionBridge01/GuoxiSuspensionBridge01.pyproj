@@ -36,6 +36,18 @@
     <Compile Include="GuoxiPackage\__init__.py" />
     <Compile Include="GuoxiSuspensionBridge.py" />
     <Compile Include="GuoxiSuspensionBridge_ref.py" />
+    <Compile Include="StructureAssembly.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StructureGeometry.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StructurePart.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StructureSketch.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{6c1392a2-fec5-48cd-8112-ecc889f78537}\2.7" />
