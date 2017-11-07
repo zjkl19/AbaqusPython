@@ -2,13 +2,22 @@ class StructureGeometry(object):
     """store the structure geometry information of the structure"""
     
     #Tower:
+    
     downTowerBottomCoordinate=(((25,3.3,-3.75),(25,3.3,3.75)),
                                 ((95,3.3,-3.75),(95,3.3,3.75)))     #west & east
     rUpDownTowerCoordinate=(((25,8.127,-3.75),(25,8.127,3.75)),
                                 ((95,8.127,-3.75),(95,8.127,3.75)))
     upTowerTopCoordinate=(((25,20.44,-3.75),(25,20.44,3.75)),
                                 ((95,20.44,-3.75),(95,20.44,3.75)))
+    '''
 
+    downTowerBottomCoordinate=(((25,3.3,-3.75),(95,3.3,-3.75)),
+                                ((25,3.3,3.75),(95,3.3,3.75)))     #west & east
+    rUpDownTowerCoordinate=(((25,8.127,-3.75),(95,8.127,-3.75)),
+                                ((25,8.127,3.75),(95,8.127,3.75)))
+    upTowerTopCoordinate=(((25,20.44,-3.75),(95,20.44,-3.75)),
+                                ((25,20.44,3.75),(95,20.44,3.75)))
+    '''
     #stiffingGirder:
     EndPointCoordinate=((-3.6,7.355,0.0),(123.6,7.355,0.0))    #west & east end point
     rGirderRigidarmCoordinate=((10,8.13,0),(15,8.3675,0),(20,8.58,0),

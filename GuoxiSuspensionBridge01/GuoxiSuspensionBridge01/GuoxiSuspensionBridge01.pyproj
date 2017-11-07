@@ -45,6 +45,12 @@
     <Compile Include="StructurePart.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StructureProperty.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StructureRegionSet.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="StructureSketch.py">
       <SubType>Code</SubType>
     </Compile>
