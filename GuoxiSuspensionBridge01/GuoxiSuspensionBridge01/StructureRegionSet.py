@@ -146,8 +146,8 @@ class StructureRegionSet(object):
         None.
         """
 
-        upTowerTopCoordinate=(((25,20.44,-3.75),(25,20.44,3.75)),
-                                    ((95,20.44,-3.75),(95,20.44,3.75)))
+        upTowerTopCoordinate=(((25,20.44,-3.75),(95,20.44,-3.75)),
+                                    ((25,20.44,3.75),(95,20.44,3.75)))
 
         uTT=self.structureGeometry.upTowerTopCoordinate
 
@@ -158,7 +158,7 @@ class StructureRegionSet(object):
         
         lst=[]
         for i in range(len(uTT)):
-            edges = e.findAt(((coff*(uTT[i][0][0]+uTT[i][1][0]), coff*(uTT[i][0][1]+uTT[i][1][1]), coff*(uTT[i][0][2]+uTT[i][1][2])),))
+            edges = e.findAt(((coff*(uTT[0][i][0]+uTT[1][i][0]), coff*(uTT[0][i][1]+uTT[1][i][1]), coff*(uTT[0][i][2]+uTT[1][i][2])),))
             pSet=p.Set(edges=edges, name='towerBeamSet'+str(i+1))
             lst.append(pSet)
         self.towerBeamRegionSet=tuple(lst)
@@ -336,7 +336,7 @@ class StructureRegionSet(object):
         
         for i in range(len(rRS)):
             lst=[]
-            for j in range(len(rRS[i])-1):
+            for j in range(len(rRS[i])):
                 edges = e.findAt(((coff*(rRS[i][j][0]+rGR[j][0]), coff*(rRS[i][j][1]+rGR[j][1]), coff*(rRS[i][j][2]+rGR[j][2])),))
                 pSet=p.Set(edges=edges, name='girderRigidarm'+str(i+1)+'-'+str(j+1))
                 lst.append(pSet)

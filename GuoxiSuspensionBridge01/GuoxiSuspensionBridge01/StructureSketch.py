@@ -61,14 +61,14 @@ class StructureSketch(object):
 
         for i in range(0,2):
             mySketch = self.structureModel.ConstrainedSketch(name='towerSketch'+str(i+1),sheetSize=10.0)
-            #dTB[0][0][0]: 1# tower, 1# tower column, x coordinate
-            mySketch.Line(point1=(dTB[i][0][0],dTB[i][0][1]), point2=(rUD[i][0][0],rUD[i][0][1]))
-            mySketch.Line(point1=(rUD[i][0][0],rUD[i][0][1]), point2=(uTT[i][0][0],uTT[i][0][1]))
-            mySketch.Line(point1=(uTT[i][0][0],uTT[i][0][1]), point2=(uTT[i][1][0]+(uTT[i][1][2]-uTT[i][0][2]),uTT[i][1][1]))
-            mySketch.Line(point1=(uTT[i][1][0]+(uTT[i][1][2]-uTT[i][0][2]),uTT[i][1][1]), point2=(rUD[i][1][0]+(rUD[i][1][2]-rUD[i][0][2]),rUD[i][1][1]))
-            mySketch.Line(point1=(rUD[i][1][0]+(rUD[i][1][2]-rUD[i][0][2]),rUD[i][1][1]), point2=(dTB[i][1][0]+(dTB[i][1][2]-dTB[i][0][2]),dTB[i][1][1]))
+            
+            mySketch.Line(point1=(dTB[0][i][0],dTB[0][i][1]), point2=(rUD[0][i][0],rUD[0][i][1]))
+            mySketch.Line(point1=(rUD[0][i][0],rUD[0][i][1]), point2=(uTT[0][i][0],uTT[0][i][1]))
+            mySketch.Line(point1=(uTT[0][i][0],uTT[0][i][1]), point2=(uTT[1][i][0]+(uTT[1][i][2]-uTT[0][i][2]),uTT[1][i][1]))
+            mySketch.Line(point1=(uTT[1][i][0]+(uTT[1][i][2]-uTT[0][i][2]),uTT[1][i][1]), point2=(rUD[1][i][0]+(rUD[1][i][2]-rUD[0][i][2]),rUD[1][i][1]))
+            mySketch.Line(point1=(rUD[1][i][0]+(rUD[1][i][2]-rUD[0][i][2]),rUD[1][i][1]), point2=(dTB[1][i][0]+(dTB[1][i][2]-dTB[0][i][2]),dTB[1][i][1]))
+            
             self.towerSketch.append(mySketch)
-
 
         self.towerSketch=tuple(self.towerSketch)
 

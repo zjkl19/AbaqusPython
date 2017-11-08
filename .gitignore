@@ -240,3 +240,9 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info

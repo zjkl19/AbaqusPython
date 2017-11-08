@@ -1,3 +1,4 @@
+from abaqusConstants import *
 class StructureAssembly(object):
     """Create 'Assembly' of the structure"""
 
@@ -37,7 +38,7 @@ class StructureAssembly(object):
 
         Raises:
         """
-        from abaqusConstants import *
+        
         p = self.structureModel.parts['towerPart1']  
         self.structureAssembly.Instance(name='towerInstance1', part=p, dependent=ON)
         p = self.structureModel.parts['towerPart2']
@@ -89,7 +90,6 @@ class StructureAssembly(object):
 
         Raises:
         """
-        from abaqusConstants import *
         a1 = self.structureModel.rootAssembly
         a1.InstanceFromBooleanMerge(name='PartAll', instances=(
             a1.instances['towerInstance1'], a1.instances['towerInstance2'], 

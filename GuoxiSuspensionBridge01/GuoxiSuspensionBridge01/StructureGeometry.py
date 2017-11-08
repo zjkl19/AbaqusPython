@@ -1,8 +1,42 @@
 class StructureGeometry(object):
-    """store the structure geometry information of the structure"""
+    """store the structure geometry information of the structure
     
+    coordinate convensions:
+
+    unsummetirc: two dimension tuple
+    1st dimension: point pointer, e.g, [0]: first point, [1]: second point
+    2nd dimension: x,y,z corrdinate, [0]: x, [1]: y, [2]: z
+
+    for example:
+    rGirderRigidarmCoordinate=((10,8.13,0),(15,8.3675,0),(20,8.58,0),
+        (30,8.93,0),(35,9.0675,0),(40,9.18,0),(45,9.2675,0),(50,9.33,0),(55,9.3675,0),
+        (60,9.38,0),
+        (65,9.3675,0),(70,9.33,0),(75,9.2675,0),(80,9.18,0),(85,9.0675,0),(90,8.93,0),
+        (100,8.58,0),(105,8.3675,0),(110,8.13,0))
+  
+    symmetric: three dimension tuple
+    1st dimension: north-south pointer, [0]: north, [1]: south
+    2nd dimension: point pointer, e.g, [0]: first point, [1]: second point
+    3rd dimension: x,y,z corrdinate
+    
+    for example:
+    hangingPointCoordinate=(((10,11.270569,-3.75),(15,13.906819,-3.75),(20,16.903937,-3.75),
+    (30,17.92136,-3.75),(35,15.940382,-3.75),(40,14.319928,-3.75),(45,13.059819,-3.75),(50,12.159874,-3.75),(55,11.619961,-3.75),
+    (60,11.44,-3.75),
+    (65,11.619961,-3.75),(70,12.159874,-3.75),(75,13.059819,-3.75),(80,14.319928,-3.75),(85,15.940382,-3.75),(90,17.92136,-3.75),
+    (100,16.903937,-3.75),(105,13.906819,-3.75),(110,11.270569,-3.75)), 
+        
+    ((10,11.270569,3.75),(15,13.906819,3.75),(20,16.903937,3.75),
+    (30,17.92136,3.75),(35,15.940382,3.75),(40,14.319928,3.75),(45,13.059819,3.75),(50,12.159874,3.75),(55,11.619961,3.75),
+    (60,11.44,3.75),
+    (65,11.619961,3.75),(70,12.159874,3.75),(75,13.059819,3.75),(80,14.319928,3.75),(85,15.940382,3.75),(90,17.92136,3.75),
+    (100,16.903937,3.75),(105,13.906819,3.75),(110,11.270569,3.75)))   
+    """
+    
+
     #Tower:
-    
+    '''
+    older:
     downTowerBottomCoordinate=(((25,3.3,-3.75),(25,3.3,3.75)),
                                 ((95,3.3,-3.75),(95,3.3,3.75)))     #west & east
     rUpDownTowerCoordinate=(((25,8.127,-3.75),(25,8.127,3.75)),
@@ -17,7 +51,7 @@ class StructureGeometry(object):
                                 ((25,8.127,3.75),(95,8.127,3.75)))
     upTowerTopCoordinate=(((25,20.44,-3.75),(95,20.44,-3.75)),
                                 ((25,20.44,3.75),(95,20.44,3.75)))
-    '''
+    
     #stiffingGirder:
     EndPointCoordinate=((-3.6,7.355,0.0),(123.6,7.355,0.0))    #west & east end point
     rGirderRigidarmCoordinate=((10,8.13,0),(15,8.3675,0),(20,8.58,0),
@@ -89,9 +123,9 @@ class StructureGeometry(object):
             lst.append(aP[i][0])
             for j in range(len(hP[i])):
                 if j==3:
-                    lst.append(uTT[0][i])
+                    lst.append(uTT[i][0])
                 elif j==16:
-                    lst.append(uTT[1][i])
+                    lst.append(uTT[i][1])
                 lst.append(hP[i][j])
             lst.append(aP[i][1])
             cableCoordinate.append(tuple(lst))

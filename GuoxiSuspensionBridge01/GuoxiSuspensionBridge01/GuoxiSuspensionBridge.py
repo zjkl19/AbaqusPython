@@ -8,13 +8,6 @@
 
 #comment by lindinan
 
-
-class StructureInteraction(object):
-    """Create 'Interaction' of the structure"""
-
-    def __init__(self):
-        pass
-
 class StructureStep(object):
     """define the step"""
 
@@ -159,3 +152,8 @@ import StructureProperty
 bridgeProperty=StructureProperty.StructureProperty(myModel,bridgeRegionSet)
 bridgeProperty.CreateProperty()
 
+#-----------------------------------------------------
+#Create interaction
+import StructureInteraction
+bridgeInteraction=StructureInteraction.StructureInteraction(myModel,bridgeGeometry,myAssembly,bridgeRegionSet)
+bridgeInteraction.CreateInteraction()

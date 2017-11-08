@@ -5,7 +5,7 @@ class StructurePart(object):
         self.structureModel=structureModel
         self.structureSketch=structureSketch
         self.abaqusPart=abaqusPart
-
+    
     def CreatePart(self):
         """Create Part
         
