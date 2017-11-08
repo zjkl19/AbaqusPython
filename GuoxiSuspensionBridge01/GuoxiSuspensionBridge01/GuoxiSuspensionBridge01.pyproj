@@ -42,6 +42,12 @@
     <Compile Include="StructureGeometry.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StructureInteraction.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StructureLoad.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="StructurePart.py">
       <SubType>Code</SubType>
     </Compile>
@@ -52,6 +58,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StructureSketch.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StructureStep.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

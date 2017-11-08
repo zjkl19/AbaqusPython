@@ -8,67 +8,6 @@
 
 #comment by lindinan
 
-class StructureStep(object):
-    """define the step"""
-
-    def __init__(self):
-        pass
-
-    def CreateStep(self):
-        """abaqus:
-            Create a step. The time period of the static step is 1.0, 
-            and the initial incrementation is 0.1; the step is created
-            after the initial step. 
-        """ 
-        myModel.StaticStep(name='beamStep', previous='Initial',
-            nlgeom=OFF)
-    
-        myModel.FieldOutputRequest(name='F-Output-2', 
-            createStepName='beamStep', variables=('SF',))       
-    
-class StructureLoad(object):
-    """define the load of the structure"""
-
-    def __init__(self):
-        pass
-
-    def CreateDisplacementBC():
-        """create the displacement of the structure
-
-        must operate manually
-
-        Required argument:
-
-        Optional arguments:
-
-        None.
-
-        Return value:
-
-        Exceptions:
-
-        None.
-        """
-        pass
-
-    def CreatePredefinedField():
-        """create the predefined field of the structure
-
-        must operate manually
-
-        Required argument:
-
-        Optional arguments:
-
-        None.
-
-        Return value:
-
-        Exceptions:
-
-        None.
-        """
-        pass
 class StructureMesh(object):
     """mesh the structrue"""
 
@@ -157,3 +96,15 @@ bridgeProperty.CreateProperty()
 import StructureInteraction
 bridgeInteraction=StructureInteraction.StructureInteraction(myModel,bridgeGeometry,myAssembly,bridgeRegionSet)
 bridgeInteraction.CreateInteraction()
+
+#-----------------------------------------------------
+#Create step
+import StructureStep
+bridgeStep=StructureStep.StructureStep(myModel)
+bridgeStep.CreateStep()
+
+#-----------------------------------------------------
+#Create load
+import StructureLoad
+bridgeLoad=StructureLoad.StructureLoad(myModel,myAssembly,bridgeRegionSet)
+bridgeLoad.CreateLoad()
