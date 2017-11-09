@@ -23,12 +23,7 @@ class StructureLoad(object):
    
     """
 
-    suspenderPredefinedLoad=((395.2283,	262.915, 395.6083,
-                              397.2881, 264.5417, 264.7815, 264.7639, 264.9563, 264.9458, 264.9483, 264.941, 264.9465,	264.7482, 264.7559,	264.5617, 396.6539,
-                              387.5433, 258.0443, 387.8515),
-                             (395.2458,	262.9267, 395.6258,
-                              397.3084,	264.5552, 264.7951,	264.7775, 264.9699,	264.9593, 264.9619, 264.9546, 264.9601,	264.7618, 264.7695,	264.5753, 396.6741,
-                              387.5672, 258.0603, 387.8756))
+
 
     def __init__(self,structureModel,structureAssembly,structureRegionSet):
         self.structureModel=structureModel
@@ -36,6 +31,7 @@ class StructureLoad(object):
         self.structureRegionSet=structureRegionSet
 
         self.__SetCablePredefinedLoad()
+        self.__SetSuspenderPredefinedLoad()
 
     def __SetCablePredefinedLoad(self):
         """set the cable of predefined load"""
@@ -54,7 +50,25 @@ class StructureLoad(object):
 
         self.cablePredefinedLoad=tuple(c)
 
+    def __SetSuspenderPredefinedLoad(self):
+        """set the suspender of predefined load"""
+
+        suspenderPredefinedLoad=[[395.2283,	262.915, 395.6083,
+                                  397.2881, 264.5417, 264.7815, 264.7639, 264.9563, 264.9458, 264.9483, 264.941, 264.9465,	264.7482, 264.7559,	264.5617, 396.6539,
+                                  387.5433, 258.0443, 387.8515],
+                                 [395.2458,	262.9267, 395.6258,
+                                  397.3084,	264.5552, 264.7951,	264.7775, 264.9699,	264.9593, 264.9619, 264.9546, 264.9601,	264.7618, 264.7695,	264.5753, 396.6741,
+                                  387.5672, 258.0603, 387.8756]]    #KN
+
+        c=[]
+        for i in range(0,len(suspenderPredefinedLoad)):
+            k=[i*1000 for i in suspenderPredefinedLoad[i]]
+            c.append(tuple(k))
+
+        self.suspenderPredefinedLoad=tuple(c)
+
     def CreateLoad(self):
+        """create the load of structure"""
         self.__CreateDisplacementBC()
         self.__CreatePredefinedField()
 
@@ -98,4 +112,15 @@ class StructureLoad(object):
                     sigma12=0.0, sigma33=None, sigma13=None, sigma23=None)
 
     def __CreateSuspenderPredefinedField(self):
-        pass
+        """create the suspender predefined field of the structure"""
+
+        A=3.14159*self.structureModel.profiles['suspenderProfile'].r**2    #area
+        
+        suspenderRegionSet=self.structureRegionSet.suspenderRegionSet
+        
+        for i in range(0,len(suspenderRegionSet)):
+            for j in range(0,len(suspenderRegionSet[i])):
+                self.structureModel.Stress(name='suspenderPredefinedField'+str(i+1)+'-'+str(j+1), 
+                    region=self.structureAssembly.instances['PartAll-1'].sets['suspenderSet'+str(i+1)+'-'+str(j+1)],
+                    distributionType=UNIFORM, sigma11=self.suspenderPredefinedLoad[i][j]/A, sigma22=0.0, 
+                    sigma12=0.0, sigma33=None, sigma13=None, sigma23=None)

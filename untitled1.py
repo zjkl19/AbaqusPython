@@ -20,3 +20,4 @@ for i in range(0,len(cablePredefinedLoad)):
     k=[i*1000 for i in cablePredefinedLoad[i]]
     c.append(tuple(k))
 print(tuple(c))
+

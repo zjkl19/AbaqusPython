@@ -246,3 +246,7 @@ ModelManifest.xml
 *.so
 *.egg
 *.egg-info
+#abaqus python:
+*.rec
+*.rpy
+abaqus.rpy.[1-9]
