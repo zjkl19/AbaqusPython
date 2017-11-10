@@ -4,20 +4,6 @@ Created on Fri Nov  3 15:33:45 2017
 
 @author: ldn
 """
-cablePredefinedLoad=[[4047.9108, 4220.5794, 4352.7746, 4572.7058,
-                     4201.9074, 4036.4827, 3944.8393, 3870.011, 3812.9638,	3774.473, 3755.0872, 3755.0909,	3774.4835, 3812.9793, 3870.0286, 3944.8536,	4036.5072, 4201.652, 
-                     4488.9624,	4273.4517, 4143.64,	3974.1143],
-                     [4048.0861, 4220.7623, 4352.9632, 4572.9039,
-                     4202.1183,	4036.6853, 3945.0373, 3870.2052, 3813.1551,	3774.6625, 3755.2757, 3755.2794, 3774.6729,	3813.1707, 3870.2228, 3945.0516, 4036.7098,	4201.8629,
-                     4489.2343,	4273.7106, 4143.8909, 3974.3549]]    #KN
-c1 = [elem*1000 for elem in cablePredefinedLoad[0]]
-c2= [elem*1000 for elem in cablePredefinedLoad[1]]
-c=(tuple(c1),tuple(c2))
-#print(c)
-
-c=[]
-for i in range(0,len(cablePredefinedLoad)):
-    k=[i*1000 for i in cablePredefinedLoad[i]]
-    c.append(tuple(k))
-print(tuple(c))
-
+"""create the mesh of the structrue"""
+    myPart = myModel.parts['PartAll']
+    Ediv=100   #the number of the Element division

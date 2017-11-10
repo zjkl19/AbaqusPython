@@ -8,29 +8,7 @@
 
 #comment by lindinan
 
-class StructureMesh(object):
-    """mesh the structrue"""
 
-    def __init__(self):
-        pass
-
-    def CreateMesh(self):
-        self.__MeshTower()
-        self.__MeshGirder()
-        self.__MeshCable()
-        self.__MeshSuspender()
-
-    def __MeshTower(self):
-        pass
-
-    def __MeshGirder(self):
-        pass
-
-    def __MeshCable(self):
-        pass
-
-    def __MeshSuspender(self):
-        pass    
          
        
 #start the program
@@ -108,3 +86,11 @@ bridgeStep.CreateStep()
 import StructureLoad
 bridgeLoad=StructureLoad.StructureLoad(myModel,myAssembly,bridgeRegionSet)
 bridgeLoad.CreateLoad()
+
+#-----------------------------------------------------
+#Create mesh
+import StructureMesh
+bridgeMesh=StructureMesh.StructureMesh(structureModel=myModel,structureRegionSet=bridgeRegionSet,
+    structureAssembly=myAssembly)
+bridgeMesh.CreateMesh()
+

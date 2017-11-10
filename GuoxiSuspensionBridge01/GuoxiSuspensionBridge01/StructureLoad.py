@@ -71,6 +71,7 @@ class StructureLoad(object):
         """create the load of structure"""
         self.__CreateDisplacementBC()
         self.__CreatePredefinedField()
+        self.__CreateGravityLoad()
 
     def __CreateDisplacementBC(self):
         """create the displacement of the structure
@@ -89,7 +90,33 @@ class StructureLoad(object):
 
         None.
         """
-        pass
+        import regionToolset
+
+        structureGeometry=self.structureRegionSet.structureGeometry    #reference
+        aP=structureGeometry.anchorPointCoordinate
+
+        v1 = self.structureAssembly.instances['PartAll-1'].vertices
+
+        for i in range(len(aP)):
+            for j in range(len(aP[i])):
+                verts1 = v1.findAt((aP[i][j], ))
+                region = regionToolset.Region(vertices=verts1)
+                self.structureModel.DisplacementBC(name='cableBC'+str(i+1)+str('-')+str(j+1), 
+                    createStepName='beamStep', region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, 
+                    ur2=0.0, ur3=0.0, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
+                    fieldName='', localCsys=None)
+
+
+        dTB=structureGeometry.downTowerBottomCoordinate
+
+        for i in range(len(dTB)):
+            for j in range(len(dTB[i])):
+                verts1 = v1.findAt((dTB[i][j], ))
+                region = regionToolset.Region(vertices=verts1)
+                self.structureModel.DisplacementBC(name='downTowerBC'+str(i+1)+str('-')+str(j+1), 
+                    createStepName='beamStep', region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, 
+                    ur2=0.0, ur3=0.0, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
+                    fieldName='', localCsys=None)
 
     def __CreatePredefinedField(self):
         """create the predefined field of the structure"""
@@ -124,3 +151,12 @@ class StructureLoad(object):
                     region=self.structureAssembly.instances['PartAll-1'].sets['suspenderSet'+str(i+1)+'-'+str(j+1)],
                     distributionType=UNIFORM, sigma11=self.suspenderPredefinedLoad[i][j]/A, sigma22=0.0, 
                     sigma12=0.0, sigma33=None, sigma13=None, sigma23=None)
+
+    def __CreateGravityLoad(self):
+        """create the gravity load of the structure"""
+
+
+        self.structureModel.Gravity(name='GravityLoad', 
+            createStepName='beamStep', comp2=-9.8, distributionType=UNIFORM, field='')
+
+   

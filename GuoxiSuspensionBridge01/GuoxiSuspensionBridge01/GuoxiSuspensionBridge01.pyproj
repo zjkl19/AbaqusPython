@@ -48,6 +48,9 @@
     <Compile Include="StructureLoad.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StructureMesh.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="StructurePart.py">
       <SubType>Code</SubType>
     </Compile>

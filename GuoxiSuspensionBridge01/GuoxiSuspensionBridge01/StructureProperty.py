@@ -105,6 +105,8 @@ class StructureProperty(object):
 
         F_FProfile=self.structureModel.GeneralizedProfile(name='F-FProfile', area=1.24E+01, i11=1.94E+00, i12=0, i22=8.58E+01, j=7.24E+00, gammaO=0.0, gammaW=0.0)
 
+        #Rigidarm profile
+        rigidArmProfile=self.structureModel.CircularProfile(name='rigidArmProfile', r=0.1)
 
         
         #cable profile
@@ -130,37 +132,91 @@ class StructureProperty(object):
         Exceptions:
 
         None.
-        """ 
+        """
+
+        C50density=2549
+        C50E=3.45e10
+        C50possionRatio=0.2
+        C50G=C50E/(2*(1+C50possionRatio)) 
+        C50ThermalExp=1.0e-5
 
         #tower section
+        ''' reference code
         downTowerSection=self.structureModel.BeamSection(name='downTowerSection', 
               integration=BEFORE_ANALYSIS, profile='downTowerProfile', 
               material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+        '''
+        downTowerSection=self.structureModel.BeamSection(name='downTowerSection', 
+              profile='downTowerProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
+
 
         upTowerSection=self.structureModel.BeamSection(name='upTowerSection', 
-              integration=BEFORE_ANALYSIS, profile='upTowerProfile', 
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+              profile='upTowerProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
 
         towerBeamSection=self.structureModel.BeamSection(name='towerBeamSection', 
-              integration=BEFORE_ANALYSIS, profile='towerBeamProfile',
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+              profile='towerBeamProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
 
         #girder section
+
         A_ASection=self.structureModel.BeamSection(name='A-ASection', 
-              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+              profile='A-AProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
 
         C_CSection=self.structureModel.BeamSection(name='C-CSection', 
-              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+              profile='C-CProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
 
         E_ESection=self.structureModel.BeamSection(name='E-ESection', 
-              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+              profile='E-EProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
 
         F_FSection=self.structureModel.BeamSection(name='F-FSection', 
-              integration=BEFORE_ANALYSIS, profile='A-AProfile', 
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False) 
+              profile='F-FProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
+
+        #rigidArm section
+        rigidArmSection=self.structureModel.BeamSection(name='rigidArmSection', 
+              integration=BEFORE_ANALYSIS, profile='rigidArmProfile', 
+              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+
+        rigidArmSectionn=self.structureModel.BeamSection(name='rigidArmSection', 
+              profile='rigidArmProfile', integration=BEFORE_ANALYSIS, 
+              beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
+              betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
+              centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
+              poissonRatio=C50possionRatio, density=C50density,
+              table=((C50E, C50G, C50ThermalExp),))
  
         #cable section
         A=3.14159*self.structureModel.profiles['cableProfile'].r**2
@@ -169,7 +225,7 @@ class StructureProperty(object):
 
         #suspender section
         A=3.14159*self.structureModel.profiles['suspenderProfile'].r**2
-        suspenderProfile=self.structureModel.CircularProfile(name='suspenderSection', r=0.031022)
+
         suspenderSection=self.structureModel.TrussSection(name='suspenderSection', material='suspenderMaterial', 
             area=A)	
        
@@ -439,7 +495,15 @@ class StructureProperty(object):
 
         None.
         """
-        pass
+        r=self.structureRegionSet.girderRigidarmRegionSet
+
+        myPart = self.structureModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.SectionAssignment(region=r[i][j], sectionName='rigidArmSection', offset=0.0, 
+                    offsetType=MIDDLE_SURFACE, offsetField='', 
+                    thicknessAssignment=FROM_SECTION)
 
     def __AssignCableSection(self):
         """assign cable section
@@ -678,7 +742,14 @@ class StructureProperty(object):
         pass
 
     def __AssignGirderRigidarmBeamSectionOrientation(self):
-        pass
+
+        r=self.structureRegionSet.girderRigidarmRegionSet
+
+        myPart = self.structureModel.parts['PartAll']
+ 
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                myPart.assignBeamSectionOrientation(region=r[i][j], method=N1_COSINES, n1=(-1.0, 0.0, 1.0))
 
     def __AssignCableBeamSectionOrientation(self):
         """assign the cable beam section orientation
