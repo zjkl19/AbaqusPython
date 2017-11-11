@@ -23,8 +23,6 @@ class StructureLoad(object):
    
     """
 
-
-
     def __init__(self,structureModel,structureAssembly,structureRegionSet):
         self.structureModel=structureModel
         self.structureAssembly=structureAssembly
@@ -70,8 +68,9 @@ class StructureLoad(object):
     def CreateLoad(self):
         """create the load of structure"""
         self.__CreateDisplacementBC()
-        self.__CreatePredefinedField()
         self.__CreateGravityLoad()
+        self.__CreatePredefinedField()
+        
 
     def __CreateDisplacementBC(self):
         """create the displacement of the structure
@@ -117,6 +116,15 @@ class StructureLoad(object):
                     createStepName='beamStep', region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, 
                     ur2=0.0, ur3=0.0, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
                     fieldName='', localCsys=None)
+
+        EP=structureGeometry.EndPointCoordinate
+        for i in range(len(EP)):
+            verts1 = v1.findAt((EP[i], ))
+            region = regionToolset.Region(vertices=verts1)
+            self.structureModel.DisplacementBC(name='girderBC'+str(i+1), 
+                createStepName='beamStep', region=region, u1=0.0, u2=0.0, u3=0.0, ur1=0.0, 
+                ur2=0.0, ur3=0.0, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, 
+                fieldName='', localCsys=None)
 
     def __CreatePredefinedField(self):
         """create the predefined field of the structure"""

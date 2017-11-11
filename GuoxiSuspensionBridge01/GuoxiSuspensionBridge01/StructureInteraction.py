@@ -29,17 +29,17 @@ class StructureInteraction(object):
         """Create rigid body constraint of the structure"""
         import regionToolset
 
-        gR=self.structureRegionSet.girderRigidarmRegionSet
+        #gR=self.structureRegionSet.girderRigidarmRegionSet
+        gRW=self.structureRegionSet.girderRigidarmWholeRegionSet
 
         rGR=self.structureGeometry.rGirderRigidarmCoordinate
 
         #v= self.structureAssembly.instances['PartAll-1'].vertices
         
-        for i in range(0,len(gR)):
-            for j in range(0,len(gR[i])):     
-                region1=regionToolset.Region(referencePoints=(self.structureAssembly.referencePoints.findAt(rGR[j],),))     #convert from ReferencesPoints to Region
-                self.structureModel.RigidBody(name='Constraint-Rigidbody-'+str(i+1)+'-'+str(j+1),
-                    refPointRegion=region1, bodyRegion=self.structureAssembly.instances['PartAll-1'].sets['girderRigidarm'+str(i+1)+'-'+str(j+1)])
+        for i in range(len(gRW)):   
+            region1=regionToolset.Region(referencePoints=(self.structureAssembly.referencePoints.findAt(rGR[i],),))     #convert from ReferencesPoints to Region
+            self.structureModel.RigidBody(name='Constraint-Rigidbody-'+str(i+1),
+                refPointRegion=region1, bodyRegion=self.structureAssembly.instances['PartAll-1'].sets['girderRigidarmWhole'+str(i+1)])
         
         '''
         reference code:

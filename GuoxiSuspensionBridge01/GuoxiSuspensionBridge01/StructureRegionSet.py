@@ -344,6 +344,16 @@ class StructureRegionSet(object):
         
         self.girderRigidarmRegionSet=tuple(self.girderRigidarmRegionSet)
 
+        lst=[]
+        for i in range(len(rGR)):
+            #reference code:
+            #edges1 = e1.findAt(((90.0, 8.83, -0.9375), ), ((90.0, 8.63, 2.8125), ))
+            edges = e.findAt(((coff*(rRS[0][i][0]+rGR[i][0]), coff*(rRS[0][i][1]+rGR[i][1]),coff*(rRS[0][i][2]+rGR[i][2])), ), ((coff*(rRS[1][i][0]+rGR[i][0]), coff*(rRS[1][i][1]+rGR[i][1]), coff*(rRS[1][i][2]+rGR[i][2])), ))
+            pSet=p.Set(edges=edges, name='girderRigidarmWhole'+str(i+1))
+            lst.append(pSet)
+        self.girderRigidarmWholeRegionSet=tuple(lst)
+
+
     def __CreateCableRegionSet(self):
         """Create Cable Region Set
         create each section of a cable a set 

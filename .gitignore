@@ -250,3 +250,10 @@ ModelManifest.xml
 *.rec
 *.rpy
 abaqus.rpy.[1-9]
+*.msg
+*.dat
+*.sim
+*.odb
+*.sta
+*.prt
+*.com

@@ -53,12 +53,14 @@ class StructureProperty(object):
         cableMaterial=self.structureModel.Material(name='cableMaterial')
         cableMaterial.Density(table=((8518.367347, ), ))    #density     
         cableMaterial.Elastic(table=((2.00E+11, 0.3), ))    #Young's module, possion ratio
+        cableMaterial.elastic.setValues(noCompression=ON, noTension=OFF)
         self.cableMaterial=cableMaterial
 
         #suspender Material
         suspenderMaterial=self.structureModel.Material(name='suspenderMaterial')
         suspenderMaterial.Density(table=((9050, ), ))    #density     
         suspenderMaterial.Elastic(table=((2.00E+11, 0.3), ))    #Young's module, possion ratio
+        #suspenderMaterial.elastic.setValues(noCompression=ON, noTension=OFF)
         self.suspenderMaterial=suspenderMaterial
 
         #C50 Material
@@ -206,17 +208,17 @@ class StructureProperty(object):
               table=((C50E, C50G, C50ThermalExp),))
 
         #rigidArm section
-        rigidArmSection=self.structureModel.BeamSection(name='rigidArmSection', 
-              integration=BEFORE_ANALYSIS, profile='rigidArmProfile', 
-              material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
+        #rigidArmSection=self.structureModel.BeamSection(name='rigidArmSection', 
+        #      integration=BEFORE_ANALYSIS, profile='rigidArmProfile', 
+        #      material='C50Material', temperatureVar=LINEAR, consistentMassMatrix=False)
 
-        rigidArmSectionn=self.structureModel.BeamSection(name='rigidArmSection', 
+        rigidArmSection=self.structureModel.BeamSection(name='rigidArmSection', 
               profile='rigidArmProfile', integration=BEFORE_ANALYSIS, 
               beamShape=CONSTANT,temperatureDependency=OFF,alphaDamping=0.0,
               betaDamping=0.0, compositeDamping=0.0,thermalExpansion=ON,dependencies=0,
               centroid=(0.0,0.0), shearCenter=(0.0, 0.0), consistentMassMatrix=False, 
               poissonRatio=C50possionRatio, density=C50density,
-              table=((C50E, C50G, C50ThermalExp),))
+              table=((C50E*20, C50G*20, C50ThermalExp),))
  
         #cable section
         A=3.14159*self.structureModel.profiles['cableProfile'].r**2

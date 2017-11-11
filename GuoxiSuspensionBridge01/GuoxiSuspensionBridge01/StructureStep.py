@@ -16,5 +16,5 @@ class StructureStep(object):
             nlgeom=OFF)
     
         self.structureModel.FieldOutputRequest(name='F-Output-2', 
-            createStepName='beamStep', variables=('SF',))       
-    
+            createStepName='beamStep', variables=('S', 'PE', 'PEEQ', 'PEMAG', 'LE', 
+            'U', 'RF', 'CF', 'SF', 'CSTRESS', 'CDISP', 'NFORC'))       
