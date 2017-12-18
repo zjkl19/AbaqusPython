@@ -3,7 +3,7 @@
 Created on Wed Dec 13 11:23:46 2017
 
 @author: ldn
-"""
+
 
 import numpy as np
 
@@ -27,3 +27,5 @@ k=100
 r=(P*l**3/(16*E*I)-P/k)*l/(4/k+2*l**3/(3*E*I))
 print(r)
 8.3*0.06*30    #左、右边跨
+"""
+

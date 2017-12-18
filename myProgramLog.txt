@@ -1,0 +1,5 @@
+2017-12-15 22:51:00,942 - untitled4.py[line:14] - DEBUG: 3
+2017-12-15 22:57:22,933 - untitled4.py[line:14] - DEBUG: 3
+2017-12-15 22:57:22,933 - untitled4.py[line:18] - DEBUG: [18, 20]
+2017-12-15 22:57:42,303 - untitled4.py[line:14] - DEBUG: 3
+2017-12-15 22:57:42,304 - untitled4.py[line:18] - DEBUG: [18, 20]
