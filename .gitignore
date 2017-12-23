@@ -257,3 +257,4 @@ abaqus.rpy.[1-9]
 *.sta
 *.prt
 *.com
+.coverage
