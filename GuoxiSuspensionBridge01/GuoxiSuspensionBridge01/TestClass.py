@@ -37,7 +37,37 @@ class TestGeometry(unittest.TestCase):
 
     def TestEndPointSpan(self):
         realEndPointSpan=self.bridgeGeometry.EndPointCoordinate[1][0]-self.bridgeGeometry.EndPointCoordinate[0][0]  
-        self.assertLessEqual(realEndPointSpan-127.2,self.err)  
+        self.assertLessEqual(realEndPointSpan-127.2,self.err)
+
+    def TestGirderA_ACoordinate():
+        pass
+    
+    def TestGirderB_BCoordinate():
+        pass     
+
+    def TestGirderC_CCoordinate():
+        pass
+
+    def TestGirderD_DCoordinate():
+        pass
+
+    def TestGirderE_ECoordinate():
+        pass
+
+    def TestGirderF_FCoordinate():
+        pass
+
+    def TestGirderWeightsSupportSpan(self):
+        realSpan=self.bridgeGeometry.GirderWeightsSupportCoordinate[1][0]-self.bridgeGeometry.GirderWeightsSupportCoordinate[0][0]
+        theorySpan=120.0  
+        self.assertLessEqual(realSpan-theorySpan,self.err)
+
+    def TestGirderTowerSupportSpan(self):
+        pass
+
+    def TestStiffeningGirderCoordinatePointCounts(self):      
+        self.assertEqual(len(self.bridgeGeometry.stiffeningGirderCoordinate),73)
+
 
 
 import logging
@@ -47,6 +77,8 @@ logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(filename)s[line:
 suite = unittest.TestSuite()
 suite.addTest(TestGeometry("TestTowerGeometry"))
 suite.addTest(TestGeometry("TestEndPointSpan"))
+suite.addTest(TestGeometry("TestGirderWeightsSupportSpan"))
+suite.addTest(TestGeometry("TestStiffeningGirderCoordinatePointCounts"))
 runner = unittest.TextTestRunner()
 
 logging.debug(runner.run(suite))
