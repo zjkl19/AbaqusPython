@@ -25,8 +25,8 @@ class StructurePart(object):
         self.__CreateStiffeningGirderPart()
         self.__CreateGirderAddOnPart()
         self.__CreateGirderRigidArmPart()       
-        #self.__CreateCablePart();
-        #self.__CreateSuspenderPart();
+        self.__CreateCablePart();
+        self.__CreateSuspenderPart();
 
     def __CreateTowerPart(self):
         """Create Tower Part
@@ -121,14 +121,11 @@ class StructurePart(object):
 
         Raises:
         """
+        for i in range(0,2):
+            cablePart = self.structureModel.Part(name='cablePart'+str(i+1), dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
+            cablePart.BaseWire(sketch=self.structureModel.sketches['cableSketch'+str(i+1)])
 
-        cablePart1 = self.structureModel.Part(name='cablePart1', dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
-        cablePart1.BaseWire(sketch=self.structureSketch.cableSketch[0])
-
-        cablePart2 = self.structureModel.Part(name='cablePart2', dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
-        cablePart2.BaseWire(sketch=self.structureSketch.cableSketch[1])
-
-        self.cablePart=(cablePart1,cablePart2)
+        #self.cablePart=(cablePart1,cablePart2)
 
     def __CreateSuspenderPart(self):
         """Create Suspender Part
@@ -142,14 +139,17 @@ class StructurePart(object):
 
         Raises:
         """
-        self.suspenderPart=[]
-        for i in range(len(self.structureSketch.suspenderSketch)):
-            suspenderPart=[]
-            for j in range(len(self.structureSketch.suspenderSketch[0])):
+
+        hP=self.structureGeometry.hangingPointCoordinate
+
+#        self.suspenderPart=[]
+        for i in range(len(hP)):
+#            suspenderPart=[]
+            for j in range(len(hP[i])):
                 sP = self.structureModel.Part(name='suspenderPart'+str(i+1)+'-'+str(j+1), dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
-                sP.BaseWire(sketch=self.structureSketch.suspenderSketch[i][j])
-                suspenderPart.append(sP)
-            self.suspenderPart.append(tuple(suspenderPart))
+                sP.BaseWire(sketch=self.structureModel.sketches['suspenderSketch'+str(i+1)+'-'+str(j+1)])
+#                suspenderPart.append(sP)
+#            self.suspenderPart.append(tuple(suspenderPart))
         
-        self.suspenderPart=tuple(self.suspenderPart)
+#        self.suspenderPart=tuple(self.suspenderPart)
 
