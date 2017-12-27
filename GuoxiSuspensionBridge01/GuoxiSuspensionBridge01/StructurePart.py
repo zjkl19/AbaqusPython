@@ -1,8 +1,9 @@
 class StructurePart(object):
     """Create 'Part' of the structure"""
 
-    def __init__(self,structureModel,structureSketch,abaqusPart):
+    def __init__(self,structureModel,structureGeometry,structureSketch,abaqusPart):
         self.structureModel=structureModel
+        self.structureGeometry=structureGeometry
         self.structureSketch=structureSketch
         self.abaqusPart=abaqusPart
     
@@ -22,7 +23,7 @@ class StructurePart(object):
         #design pattern: builder
         self.__CreateTowerPart();
         self.__CreateStiffeningGirderPart()
-#self.__CreateGirderAddOnPart()
+        self.__CreateGirderAddOnPart()
         self.__CreateGirderRigidArmPart()       
         #self.__CreateCablePart();
         #self.__CreateSuspenderPart();
@@ -65,7 +66,7 @@ class StructurePart(object):
         #stiffeningGirderPart.BaseWire(sketch=self.structureSketch.stiffeningGirderSketch)
         #self.stiffeningGirderPart=stiffeningGirderPart
  
-    def __CreateGirderRigidArmPart():
+    def __CreateGirderRigidArmPart(self):
         """Create Girder RigidArm Part
         
         function summary
@@ -77,15 +78,37 @@ class StructurePart(object):
 
         Raises:
         """ 
+        rGR=self.structureGeometry.rGirderRigidarmCoordinate
+
         self.girderRigidarmPart=[]
         #for i in range(len(self.structureSketch.girderRigidarmSketch)):
-        for i in range(len(self.structureSketch.girderRigidarmSketch)):
+        for i in range(len(rGR)):
             girderRigidarmPart = self.structureModel.Part(name='girderRigidarmPart'+str(i+1), dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
             girderRigidarmPart.BaseWire(sketch=self.structureModel.sketches['girderRigidarmSketch'+str(i+1)])
             #self.girderRigidarmPart.append(girderRigidarmPart)
         
         #self.girderRigidarmPart=tuple(self.girderRigidarmPart)
-        
+
+    def __CreateGirderAddOnPart(self):
+        """Create Girder AddOn Part
+        """
+        self.__CreateGirderWeightsSupportBeamPart()
+        self.__CreateGirderTowerBeamPart()
+
+    def __CreateGirderWeightsSupportBeamPart(self):
+        """Create Girder Weights Support Beam Part
+        """
+        for i in range(0,2):    
+            girderWeightsSupportBeamPart = self.structureModel.Part(name='girderWeightsSupportBeamPart'+str(i+1), dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
+            girderWeightsSupportBeamPart.BaseWire(sketch=self.structureModel.sketches['girderWeightsSupportBeamSketch'+str(i+1)])
+
+    def __CreateGirderTowerBeamPart(self):
+        """Create Girder Tower Beam Part
+        """
+        for i in range(0,2):    #i belongs to {0,1}, west to east
+            girderTowerBeamPart = self.structureModel.Part(name='girderTowerBeamPart'+str(i+1), dimensionality=self.abaqusPart.THREE_D, type=self.abaqusPart.DEFORMABLE_BODY)
+            girderTowerBeamPart.BaseWire(sketch=self.structureModel.sketches['girderTowerBeamSketch'+str(i+1)])
+       
     def __CreateCablePart(self):
         """Create Cable Part
         

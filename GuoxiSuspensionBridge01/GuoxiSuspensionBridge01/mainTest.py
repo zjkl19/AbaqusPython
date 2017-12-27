@@ -46,7 +46,7 @@ bridgeSketch.CreateSketch()
 #Create parts
 import part as abaqusPart
 import StructurePart as SP
-bridgePart=SP.StructurePart(myModel,bridgeSketch,abaqusPart)
+bridgePart=SP.StructurePart(myModel,bridgeGeometry,bridgeSketch,abaqusPart)
 bridgePart.CreatePart()
 
 mdb.saveAs(pathName='mainTest.cae')

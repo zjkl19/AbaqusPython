@@ -228,16 +228,16 @@ mdb.models['GuoxiSuspensionBridge'].sketches['stiffeningGirderSketch'].Line(
 mdb.models['GuoxiSuspensionBridge'].sketches['stiffeningGirderSketch'].Line(
     point1=(121.454187, 7.489113), point2=(123.6, 7.355))
 mdb.models['GuoxiSuspensionBridge'].ConstrainedSketch(name=
-    'girderWeightsBeamSketch1', sheetSize=10.0)
-mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsBeamSketch1'].Line(
+    'girderWeightsSupportBeamSketch1', sheetSize=10.0)
+mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsSupportBeamSketch1'].Line(
     point1=(-2.75, 7.58), point2=(0, 7.58))
-mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsBeamSketch1'].Line(
+mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsSupportBeamSketch1'].Line(
     point1=(0, 7.58), point2=(2.75, 7.58))
 mdb.models['GuoxiSuspensionBridge'].ConstrainedSketch(name=
-    'girderWeightsBeamSketch2', sheetSize=10.0)
-mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsBeamSketch2'].Line(
+    'girderWeightsSupportBeamSketch2', sheetSize=10.0)
+mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsSupportBeamSketch2'].Line(
     point1=(117.25, 7.58), point2=(120, 7.58))
-mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsBeamSketch2'].Line(
+mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsSupportBeamSketch2'].Line(
     point1=(120, 7.58), point2=(122.75, 7.58))
 mdb.models['GuoxiSuspensionBridge'].ConstrainedSketch(name=
     'girderTowerBeamSketch1', sheetSize=10.0)
@@ -622,4 +622,119 @@ mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
 mdb.models['GuoxiSuspensionBridge'].parts['stiffeningGirderPart'].BaseWire(
     sketch=
     mdb.models['GuoxiSuspensionBridge'].sketches['stiffeningGirderSketch'])
-# Save by ldn on 2017_12_27-17.13.22; build 6.14-1 2014_06_05-06.11.02 134264
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderWeightsSupportBeamPart1', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderWeightsSupportBeamPart1'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsSupportBeamSketch1'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderWeightsSupportBeamPart2', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderWeightsSupportBeamPart2'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderWeightsSupportBeamSketch2'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderTowerBeamPart1', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderTowerBeamPart1'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderTowerBeamSketch1'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderTowerBeamPart2', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderTowerBeamPart2'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderTowerBeamSketch2'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart1', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart1'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch1'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart2', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart2'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch2'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart3', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart3'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch3'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart4', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart4'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch4'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart5', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart5'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch5'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart6', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart6'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch6'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart7', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart7'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch7'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart8', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart8'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch8'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart9', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart9'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch9'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart10', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart10'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch10'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart11', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart11'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch11'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart12', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart12'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch12'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart13', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart13'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch13'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart14', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart14'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch14'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart15', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart15'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch15'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart16', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart16'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch16'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart17', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart17'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch17'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart18', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart18'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch18'])
+mdb.models['GuoxiSuspensionBridge'].Part(dimensionality=THREE_D, name=
+    'girderRigidarmPart19', type=DEFORMABLE_BODY)
+mdb.models['GuoxiSuspensionBridge'].parts['girderRigidarmPart19'].BaseWire(
+    sketch=
+    mdb.models['GuoxiSuspensionBridge'].sketches['girderRigidarmSketch19'])
+# Save by ldn on 2017_12_27-20.31.09; build 6.14-1 2014_06_05-06.11.02 134264

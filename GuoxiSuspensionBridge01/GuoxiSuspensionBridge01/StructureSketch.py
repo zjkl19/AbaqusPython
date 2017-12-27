@@ -151,18 +151,17 @@ class StructureSketch(object):
     def __CreateGirderAddOn(self):
         """Create Girder Add-On
         """
-        self.__CreateGirderWeightsSupportBeam()
+        self.__CreateGirderWeightsSupportBeamSketch()
         self.__CreateGirderTowerBeamSketch()
-        pass
 
-    def __CreateGirderWeightsSupportBeam(self):
+    def __CreateGirderWeightsSupportBeamSketch(self):
         """Create Girder Weights Support Beam Sketch
         """
         GWB=self.structureGeometry.GirderWeightsBeamCoordinate
         GWS=self.structureGeometry.GirderWeightsSupportCoordinate
 
         for i in range(0,2):    #i belongs to {0,1}, west to east
-            mySketch = self.structureModel.ConstrainedSketch(name='girderWeightsBeamSketch'+str(i+1),sheetSize=10.0)
+            mySketch = self.structureModel.ConstrainedSketch(name='girderWeightsSupportBeamSketch'+str(i+1),sheetSize=10.0)
             mySketch.Line(point1=(GWB[i][0][0]+GWB[i][0][2],GWB[i][0][1]), point2=(GWS[i][0],GWS[i][1]))       
             mySketch.Line(point1=(GWS[i][0],GWS[i][1]), point2=(GWB[i][1][0]+GWB[i][1][2],GWB[i][1][1]))
   
