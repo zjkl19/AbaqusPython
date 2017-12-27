@@ -34,6 +34,7 @@
     </Compile>
     <Compile Include="GuoxiPackage\CreatePart.py" />
     <Compile Include="GuoxiPackage\__init__.py" />
+    <Compile Include="mainTest.py" />
     <Compile Include="TestClass.py" />
     <Compile Include="GuoxiSuspensionBridge.py" />
     <Compile Include="GuoxiSuspensionBridge_ref.py" />

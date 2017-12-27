@@ -32,11 +32,11 @@ class StructureGeometry(object):
     (65,11.619961,3.75),(70,12.159874,3.75),(75,13.059819,3.75),(80,14.319928,3.75),(85,15.940382,3.75),(90,17.92136,3.75),
     (100,16.903937,3.75),(105,13.906819,3.75),(110,11.270569,3.75)))   
     """
-    
+        
 
     #Tower:
     '''
-    older:
+    obsoleted code01:
     downTowerBottomCoordinate=(((25,3.3,-3.75),(25,3.3,3.75)),
                                 ((95,3.3,-3.75),(95,3.3,3.75)))     #west & east
     rUpDownTowerCoordinate=(((25,8.127,-3.75),(25,8.127,3.75)),
@@ -45,13 +45,26 @@ class StructureGeometry(object):
                                 ((95,20.44,-3.75),(95,20.44,3.75)))
     '''
 
+    """obsoleted code:02
     downTowerBottomCoordinate=(((25,3.3,-3.75),(95,3.3,-3.75)),
                                 ((25,3.3,3.75),(95,3.3,3.75)))     #west & east
     rUpDownTowerCoordinate=(((25,8.127,-3.75),(95,8.127,-3.75)),
                                 ((25,8.127,3.75),(95,8.127,3.75)))
     upTowerTopCoordinate=(((25,20.44,-3.75),(95,20.44,-3.75)),
                                 ((25,20.44,3.75),(95,20.44,3.75)))
+    """
+
+    GirderTowerBeamSupportCoordinate=((25,8.127,-2.75),(95,8.127,-2.75),(25,8.127,2.75),(95,8.127,2.75))
     
+    TowerTopCoordinate=(((25,20.44,-3.75),(25,20.44,3.75)),((95,20.44,-3.75),(95,20.44,3.75)))     #west & east
+    TowerBottomCoordinate=(((25,3.3,-3.75),(25,3.3,3.75)),((95,3.3,-3.75),(95,3.3,3.75)))     
+    TowerBeam01Coordinate=(((25,8.127,-3.75),GirderTowerBeamSupportCoordinate[0],GirderTowerBeamSupportCoordinate[2],
+        (25,8.127,3.75)),((95,8.127,-3.75),GirderTowerBeamSupportCoordinate[1],GirderTowerBeamSupportCoordinate[3],
+        (95,8.127,3.75)))
+    TowerBeam02Coordinate=(((25,16.482,-3.75),(25,16.482,3.75)),((95,16.482,-3.75),(95,16.482,3.75)))
+    TowerBeam03Coordinate=(((25,17.617,-3.75),(25,17.617,3.75)),((95,17.617,-3.75),(95,17.617,3.75)))
+    TowerBeam04Coordinate=(((25,18.737,-3.75),(25,18.737,3.75)),((95,18.737,-3.75),(95,18.737,3.75)))
+
     #stiffingGirder:
     EndPointCoordinate=((-3.6,7.355,0.0),(123.6,7.355,0.0))    #west & east end point
     rGirderRigidarmCoordinate=((10,8.13,0),(15,8.3675,0),(20,8.58,0),
@@ -101,7 +114,10 @@ class StructureGeometry(object):
         (65,8.9675,3.75),(70,8.93,3.75),(75,8.8675,3.75),(80,8.78,3.75),(85,8.6675,3.75),(90,8.53,3.75),
         (100,8.18,3.75),(105,7.9675,3.75),(110,7.73,3.75)))
 
-
+    #Girder add-on
+    GirderTowerBeamCoordinate=(((25,8.7675,-2.75),(25,8.7675,2.75)),((95,8.7675,-2.75),(95,8.7675,2.75)))
+    GirderWeightsBeamCoordinate=(((0,7.58,-2.75),(0,7.58,2.75)),((120.0,7.58,-2.75),(120.0,7.58,2.75)))
+    #GirderTowerBeamSupportCoordinate=((25,8.127,-2.75),(95,8.127,-2.75),(25,8.127,2.75),(95,8.127,2.75))
 
     #cable
     anchorPointCoordinate=(((1.45,6.473,-3.75),(121.45,6.473,-3.75)),   #northern 1#  
@@ -123,8 +139,10 @@ class StructureGeometry(object):
     #suspender
 
     def __init__(self):
+
         self.__SetCableCoordinate()    #calc the cable coordinate
         self.__SetStiffeningGirderCoordinate() 
+
 
     def __SetCableCoordinate(self):
         """set the cable coordinate
@@ -145,7 +163,7 @@ class StructureGeometry(object):
         """
         aP=self.anchorPointCoordinate
         hP=self.hangingPointCoordinate
-        uTT=self.upTowerTopCoordinate
+        TT=self.TowerTopCoordinate
         
         cableCoordinate=[]
         for i in range(len(aP)):
@@ -153,15 +171,15 @@ class StructureGeometry(object):
             lst.append(aP[i][0])
             for j in range(len(hP[i])):
                 if j==3:
-                    lst.append(uTT[i][0])
+                    lst.append(TT[0][i])
                 elif j==16:
-                    lst.append(uTT[i][1])
+                    lst.append(TT[1][i])
                 lst.append(hP[i][j])
             lst.append(aP[i][1])
             cableCoordinate.append(tuple(lst))
         cableCoordinate=tuple(cableCoordinate)
         self.cableCoordinate=cableCoordinate
-    
+ 
     def __SetStiffeningGirderCoordinate(self):
         """set the stiffening girder coordinate
 
